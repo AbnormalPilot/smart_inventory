@@ -90,3 +90,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Leaflet demand popup styling */
+.demand-popup .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+.demand-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 12px;
+  line-height: 1.4;
+}
+.demand-popup .leaflet-popup-tip {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
