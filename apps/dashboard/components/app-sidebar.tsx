@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
+  MapPin,
   Receipt,
   Package,
   BarChart3,
@@ -32,6 +33,7 @@ const navGroups = [
     label: "Overview",
     items: [
       { title: "Dashboard", href: "/", icon: LayoutDashboard },
+      { title: "Maps", href: "/maps", icon: MapPin },
     ],
   },
   {
