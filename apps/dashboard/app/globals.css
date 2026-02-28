@@ -90,3 +90,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom scrollbar */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+}
+
+/* Print styles for billing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #bill-content,
+  #bill-content * {
+    visibility: visible;
+  }
+  #bill-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 2rem;
+  }
+}
