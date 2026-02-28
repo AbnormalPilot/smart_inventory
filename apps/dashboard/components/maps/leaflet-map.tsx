@@ -41,7 +41,7 @@ export default function LeafletMap({
     <MapContainer
       center={center}
       zoom={13}
-      className="h-full w-full rounded-lg"
+      className="h-full w-full"
       zoomControl={true}
     >
       <TileLayer

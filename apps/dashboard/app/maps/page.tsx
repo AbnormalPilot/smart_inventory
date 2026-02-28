@@ -10,7 +10,7 @@ import { AlertCircle } from "lucide-react"
 
 const LeafletMap = dynamic(() => import("@/components/maps/leaflet-map"), {
   ssr: false,
-  loading: () => <Skeleton className="h-full w-full rounded-lg" />,
+  loading: () => <Skeleton className="absolute inset-0" />,
 })
 
 export default function MapsPage() {
@@ -19,21 +19,21 @@ export default function MapsPage() {
 
   if (loading || latitude === null || longitude === null) {
     return (
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <Skeleton className="h-[calc(100vh-16rem)] w-full rounded-lg" />
+      <div className="relative flex-1 -m-4 md:-m-6">
+        <Skeleton className="absolute inset-0" />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
+    <div className="relative flex-1 -m-4 md:-m-6">
       {error && (
-        <Badge variant="destructive" className="w-fit gap-1">
+        <Badge variant="destructive" className="absolute top-2 left-2 z-[1000] w-fit gap-1">
           <AlertCircle className="h-3 w-3" />
           Using fallback location (New Delhi) — {error}
         </Badge>
       )}
-      <div className="relative h-[calc(100vh-16rem)]">
+      <div className="absolute inset-0">
         <LeafletMap
           latitude={latitude}
           longitude={longitude}
