@@ -8,19 +8,19 @@ const testimonials = [
     name: "Rajesh Sharma",
     role: "Grocery Store Owner, Mumbai",
     content: "Smart Inventory cut my stockouts by 80%. The AI predictions are remarkably accurate!",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-1.jpg",
   },
   {
     name: "Priya Patel",
     role: "Pharmacy Owner, Delhi",
     content: "The billing system is lightning fast. My checkout queue has basically disappeared.",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-2.jpg",
   },
   {
     name: "Amit Kumar",
     role: "Electronics Retailer, Bangalore",
     content: "The geolocation feature helped me identify a delivery zone I was completely missing. Revenue up 30%!",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-3.jpg",
   },
 ]
 
@@ -29,19 +29,19 @@ const testimonials2 = [
     name: "Sneha Desai",
     role: "Fashion Boutique, Pune",
     content: "Best inventory tool I've used. The AI chat assistant feels like having a business analyst on call 24/7.",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-4.jpg",
   },
   {
     name: "Vikram Singh",
     role: "Supermarket Chain, Jaipur",
     content: "We manage 5 stores with Smart Inventory. The dashboard gives me a real-time pulse of every location.",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-5.jpg",
   },
   {
     name: "Meera Joshi",
     role: "Bakery Owner, Hyderabad",
     content: "No more wasted ingredients. The demand forecasting alone paid for itself in the first month.",
-    avatar: "/placeholder.svg?height=48&width=48",
+    avatar: "/avatar-6.jpg",
   },
 ]
 
@@ -120,16 +120,19 @@ export function TestimonialsSection() {
   }, [isPaused, isInitialized])
 
   return (
-    <section id="testimonials" className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="testimonials" className="py-32 px-6 relative overflow-hidden bg-cover bg-center bg-fixed" style={{ backgroundImage: `url('/bg-testimonials-tech.jpg')` }}>
+      {/* Dark frosted overlay for perfect dark-mode legibility and premium contrast */}
+      <div className="absolute inset-0 bg-zinc-950/85 backdrop-blur-sm" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-normal leading-tight font-serif">What they say about us</h2>
+          <h2 className="text-4xl md:text-5xl font-normal leading-tight font-serif text-white">What they say about us</h2>
         </div>
 
         <div className="space-y-6">
           <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-zinc-950/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-zinc-950/80 to-transparent z-10 pointer-events-none" />
 
             <div
               ref={scrollRef}
@@ -143,7 +146,7 @@ export function TestimonialsSection() {
               {duplicatedTestimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-full sm:w-[400px] bg-card border border-border rounded-2xl p-8 border-none py-4"
+                  className="flex-shrink-0 w-full sm:w-[400px] bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 rounded-2xl p-8 py-4 shadow-xl"
                 >
                   <div className="flex items-start gap-4 mb-6">
                     <Image
@@ -153,13 +156,13 @@ export function TestimonialsSection() {
                       height={48}
                       className="w-12 h-12 rounded-full object-cover"
                     />
-                    <p className="text-foreground leading-relaxed flex-1 text-lg">
+                    <p className="text-zinc-300 leading-relaxed flex-1 text-lg">
                       &ldquo;{testimonial.content}&rdquo;
                     </p>
                   </div>
                   <div className="mt-auto">
-                    <p className="text-foreground text-sm font-bold">{testimonial.name}</p>
-                    <p className="text-muted-foreground text-xs">{testimonial.role}</p>
+                    <p className="text-white text-sm font-bold">{testimonial.name}</p>
+                    <p className="text-zinc-400 text-xs">{testimonial.role}</p>
                   </div>
                 </div>
               ))}
@@ -167,8 +170,8 @@ export function TestimonialsSection() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-zinc-950/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-zinc-950/80 to-transparent z-10 pointer-events-none" />
 
             <div
               ref={scrollRef2}
@@ -182,7 +185,7 @@ export function TestimonialsSection() {
               {duplicatedTestimonials2.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-full sm:w-[400px] bg-card border border-border rounded-2xl p-8 border-none py-4"
+                  className="flex-shrink-0 w-full sm:w-[400px] bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 rounded-2xl p-8 py-4 shadow-xl"
                 >
                   <div className="flex items-start gap-4 mb-6">
                     <Image
@@ -192,13 +195,13 @@ export function TestimonialsSection() {
                       height={48}
                       className="w-12 h-12 rounded-full object-cover"
                     />
-                    <p className="text-lg text-foreground leading-relaxed flex-1">
+                    <p className="text-lg text-zinc-300 leading-relaxed flex-1">
                       &ldquo;{testimonial.content}&rdquo;
                     </p>
                   </div>
                   <div className="mt-auto">
-                    <p className="text-foreground text-sm font-bold">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <p className="text-white text-sm font-bold">{testimonial.name}</p>
+                    <p className="text-sm text-zinc-400">{testimonial.role}</p>
                   </div>
                 </div>
               ))}

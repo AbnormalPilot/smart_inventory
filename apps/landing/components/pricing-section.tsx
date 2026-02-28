@@ -53,10 +53,10 @@ function FeatureCard({ item }: { item: (typeof showcaseItems)[0] }) {
   const Icon = item.icon
   return (
     <div
-      className="rounded-3xl bg-white p-6 h-full flex flex-col"
+      className="rounded-3xl bg-white/70 backdrop-blur-xl border border-white/60 p-6 h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:bg-white/90 hover:shadow-xl"
       style={{
         boxShadow:
-          "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px",
+          "rgba(14, 63, 126, 0.04) 0px 8px 24px -6px",
       }}
     >
       {/* Icon header */}
@@ -88,7 +88,7 @@ export function PricingSection() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
   const positionRef = useRef(0)
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number>(0)
 
   const duplicatedItems = [...showcaseItems, ...showcaseItems, ...showcaseItems]
 
@@ -125,10 +125,16 @@ export function PricingSection() {
   }, [isHovered])
 
   return (
-    <section id="showcase" className="py-32 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 text-center mb-20">
-        <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Feature showcase</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+    <section id="showcase" className="py-32 overflow-hidden relative bg-cover bg-center bg-fixed" style={{ backgroundImage: `url('/bg-showcase-tech.jpg')` }}>
+      {/* Light aesthetic overlay to blend the abstract code art with the UI */}
+      <div className="absolute inset-0 bg-white/70 backdrop-blur-[3px]" />
+      <div className="absolute inset-0 opacity-20 mix-blend-color-burn" style={{
+        backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.4) 0%, transparent 60%)`
+      }} />
+
+      <div className="max-w-7xl mx-auto px-6 text-center mb-20 relative z-10">
+        <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif text-slate-900 drop-shadow-sm">Feature showcase</h2>
+        <p className="text-slate-800 font-medium max-w-2xl mx-auto leading-relaxed">
           Explore the tools that make Smart Inventory the most complete retail intelligence platform.
         </p>
       </div>

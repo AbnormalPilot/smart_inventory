@@ -16,19 +16,19 @@ html {
   --card-foreground: oklch(0.1 0 0);
   --popover: oklch(0.99 0 0);
   --popover-foreground: oklch(0.1 0 0);
-  --primary: oklch(0.1 0 0);
+  --primary: oklch(0.55 0.25 270); /* Vibrant Indigo */
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.94 0 0);
-  --secondary-foreground: oklch(0.1 0 0);
-  --muted: oklch(0.92 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.94 0 0);
-  --accent-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.94 0.05 270); /* Light Indigo */
+  --secondary-foreground: oklch(0.2 0.05 270);
+  --muted: oklch(0.96 0.02 270);
+  --muted-foreground: oklch(0.45 0.05 270);
+  --accent: oklch(0.65 0.25 330); /* Vibrant Fuchsia/Pink */
+  --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.94 0 0);
-  --ring: oklch(0.1 0 0);
+  --border: oklch(0.90 0.02 270);
+  --input: oklch(0.90 0.02 270);
+  --ring: oklch(0.55 0.25 270);
   --chart-1: oklch(0.1 0 0);
   --chart-2: oklch(0.4 0 0);
   --chart-3: oklch(0.6 0 0);
@@ -46,9 +46,9 @@ html {
 }
 
 @theme inline {
-  /* Add serif font for headings */
-  --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif;
-  --font-serif: "Playfair Display", "Georgia", serif;
+  /* Premium modern fonts for sans and headers */
+  --font-sans: var(--font-outfit), "Outfit", "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-space), "Space Grotesk", "Inter", sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);

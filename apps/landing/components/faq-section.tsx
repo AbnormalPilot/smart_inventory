@@ -35,26 +35,32 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-32 px-6 pb-80">
-      <div className="max-w-4xl mx-auto">
+    <section id="faq" className="py-32 px-6 pb-80 relative overflow-hidden bg-cover bg-center bg-fixed" style={{ backgroundImage: `url('/bg-faq-tech.jpg')` }}>
+      {/* Dark frosted overlay for perfect dark-mode legibility */}
+      <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-md" />
+      <div className="absolute inset-0 opacity-40 mix-blend-color-dodge" style={{
+        backgroundImage: `radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%)`
+      }} />
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Frequently asked questions</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif text-white">Frequently asked questions</h2>
+          <p className="text-zinc-300 max-w-2xl mx-auto leading-relaxed">
             Everything you need to know about Smart Inventory. Have a question not listed? Contact our support.
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="space-y-3 py-0 my-0">
+        <Accordion type="single" collapsible className="space-y-4 py-0 my-0">
           {faqs.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="bg-card border border-border rounded-xl px-6 data-[state=open]:border-foreground/30"
+              className="bg-black/40 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 rounded-2xl px-6 data-[state=open]:border-emerald-500/50 data-[state=open]:bg-black/60 shadow-lg hover:shadow-xl"
             >
-              <AccordionTrigger className="text-left text-base font-medium text-foreground hover:no-underline py-5">
+              <AccordionTrigger className="text-left text-base font-medium text-white hover:no-underline py-6 focus:outline-none">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground pb-5 leading-relaxed text-sm">
+              <AccordionContent className="text-emerald-50/70 pb-6 leading-relaxed text-sm lg:text-base border-t border-white/5 pt-4">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

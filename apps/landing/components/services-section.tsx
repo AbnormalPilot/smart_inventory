@@ -78,9 +78,12 @@ export function ServicesSection() {
   }, [])
 
   return (
-    <section id="how-it-works" className="py-32 px-6 pb-24 relative overflow-hidden">
+    <section id="how-it-works" className="py-32 px-6 pb-24 relative overflow-hidden bg-cover bg-center bg-fixed" style={{ backgroundImage: `url('/bg-services-tech.jpg')` }}>
+      {/* Light aesthetic overlay to blend the logistics imagery with the UI */}
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-[4px]" />
+      
       <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-0">
-        <span className="font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-zinc-100 whitespace-nowrap">
+        <span className="font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-black/[0.03] whitespace-nowrap mix-blend-overlay">
           MISSION
         </span>
       </div>
@@ -140,27 +143,48 @@ export function ServicesSection() {
                 </p>
               </div>
             </div>
+
+            <div className="order-2 lg:order-1 relative rounded-2xl overflow-hidden shadow-2xl h-64 lg:h-full min-h-[300px] group border border-white/10">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                style={{ backgroundImage: `url('/dashboard-mockup.jpg')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-white text-xs font-semibold uppercase tracking-wider">Live System Sync</span>
+                </div>
+                <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-blue-400 to-indigo-500 w-[85%] rounded-full" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Everything you need</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        <div className="text-center mb-20 relative z-10">
+          <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif text-slate-900 drop-shadow-sm">Everything you need</h2>
+          <p className="text-slate-800 max-w-2xl mx-auto leading-relaxed font-medium">
             A complete platform to manage your inventory from purchase to sale, whether you run one store or many.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 relative z-10">
           {services.map((service, index) => (
             <div
               key={index}
-              className="group p-8 rounded-3xl hover:bg-zinc-50 transition-colors duration-300 text-center"
+              className="group p-8 rounded-3xl bg-white/70 backdrop-blur-xl border border-white/60 hover:bg-white/90 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 text-center"
+              style={{
+                boxShadow: "rgba(14, 63, 126, 0.04) 0px 8px 24px -6px",
+              }}
             >
               <div className="mb-6 flex justify-center">
                 <AnimatedIcon Icon={service.icon} delay={index * 0.2} />
               </div>
-              <h3 className="text-xl font-medium mb-3 text-foreground">{service.title}</h3>
-              <p className="text-muted-foreground leading-relaxed text-sm">{service.description}</p>
+              <h3 className="text-xl font-medium mb-3 text-slate-900">{service.title}</h3>
+              <p className="text-slate-700 leading-relaxed text-sm font-medium">{service.description}</p>
             </div>
           ))}
         </div>
