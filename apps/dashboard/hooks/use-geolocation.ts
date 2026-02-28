@@ -1,6 +1,6 @@
 import * as React from "react"
 
-const FALLBACK_COORDS = { latitude: 28.6139, longitude: 77.209 } // New Delhi
+const FALLBACK_COORDS = { latitude: 18.6298, longitude: 73.9131 } // Ajeenkya DY Patil University, Lohegaon
 
 interface GeolocationState {
   latitude: number | null
