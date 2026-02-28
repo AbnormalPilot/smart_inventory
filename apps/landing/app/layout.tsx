@@ -8,8 +8,8 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 const _playfair = Playfair_Display({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Smart Inventory - Landing",
-  description: "Smart Inventory management platform",
+  title: "Smart Inventory — AI-Powered Retail Intelligence",
+  description: "Inventory optimization, reinvented. AI-powered retail intelligence for small businesses.",
 }
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      <body className={`font-sans antialiased`}>
         {children}
       </body>
     </html>

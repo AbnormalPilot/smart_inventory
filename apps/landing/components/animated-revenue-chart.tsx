@@ -3,21 +3,13 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
-import { TrendingUp, Home, Key, Calendar, Shield } from "lucide-react"
+import { TrendingUp, Package, ShoppingCart, BarChart3, MapPin } from "lucide-react"
 
 const revenueCategories = [
-  { name: "Short-term rentals", icon: Calendar, color: "#3b82f6" },
-  { name: "Long-term leases", icon: Key, color: "#10b981" },
-  { name: "Property fees", icon: Home, color: "#8b5cf6" },
-  { name: "Insurance", icon: Shield, color: "#f59e0b" },
-]
-
-// Static data to prevent hydration mismatch
-const defaultData = [
-  { name: "Short-term rentals", icon: Calendar, color: "#3b82f6", value: 28450 },
-  { name: "Long-term leases", icon: Key, color: "#10b981", value: 23441 },
-  { name: "Property fees", icon: Home, color: "#8b5cf6", value: 19320 },
-  { name: "Insurance", icon: Shield, color: "#f59e0b", value: 15892 },
+  { name: "Product Sales", icon: ShoppingCart, color: "#3b82f6" },
+  { name: "Recurring Orders", icon: Package, color: "#10b981" },
+  { name: "Analytics Premium", icon: BarChart3, color: "#8b5cf6" },
+  { name: "Delivery Insights", icon: MapPin, color: "#f59e0b" },
 ]
 
 function generateRandomData() {
@@ -28,24 +20,16 @@ function generateRandomData() {
 }
 
 export function AnimatedRevenueChart() {
-  const [isClient, setIsClient] = useState(false)
-  const [data, setData] = useState(defaultData)
+  const [data, setData] = useState(generateRandomData())
   const [totalRevenue, setTotalRevenue] = useState(0)
   const [growth, setGrowth] = useState(12.5)
   const [activeIndex, setActiveIndex] = useState(0)
-
-  // Initialize only on client to prevent hydration mismatch
-  useEffect(() => {
-    setIsClient(true)
-    setData(generateRandomData())
-  }, [])
 
   useEffect(() => {
     const total = data.reduce((sum, item) => sum + item.value, 0)
     setTotalRevenue(total)
   }, [data])
 
-  // Animate data changes
   useEffect(() => {
     const interval = setInterval(() => {
       setData(generateRandomData())
@@ -54,7 +38,6 @@ export function AnimatedRevenueChart() {
     return () => clearInterval(interval)
   }, [])
 
-  // Cycle through active segments
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % revenueCategories.length)
@@ -76,7 +59,7 @@ export function AnimatedRevenueChart() {
     >
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900">Rental Revenue</h3>
+          <h3 className="text-lg font-semibold text-slate-900">Revenue Breakdown</h3>
           <p className="text-sm text-slate-500">This Quarter</p>
         </div>
         <div className="text-right">
@@ -128,7 +111,6 @@ export function AnimatedRevenueChart() {
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Center content */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <AnimatePresence mode="wait">
             <motion.div

@@ -2,34 +2,34 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const faqs = [
   {
-    question: "How do I post a listing on Homie?",
+    question: "How do I get started with Smart Inventory?",
     answer:
-      "It's very simple! Create an account, click 'Post a listing', add photos and a description of your property, set the price and availability. Your listing will be live within minutes after verification.",
+      "It's very simple! Create an account, add your products (manually or import via CSV), and start tracking. Your dashboard will be live within minutes — no complex setup required.",
   },
   {
-    question: "What are the fees for owners?",
+    question: "What does Smart Inventory cost?",
     answer:
-      "Homie charges a 3% commission only when a rental is confirmed. No listing fees, no mandatory subscription. The Pro plan at $49/month reduces the commission to 2% for multi-property owners.",
+      "Smart Inventory is free for the hackathon demo. Our production pricing will include a generous free tier for small shops, with premium plans for multi-store operations and advanced AI features.",
   },
   {
-    question: "How are tenants verified?",
+    question: "How accurate is the AI demand forecasting?",
     answer:
-      "Each tenant must provide an ID and proof of income. We verify these documents and assign a trust score. Owners can view the complete profile before accepting a request.",
+      "Our AI analyzes your historical sales data, seasonal patterns, and market signals to achieve 95%+ accuracy on restock predictions. The model continuously improves as it learns your business patterns.",
   },
   {
-    question: "Are payments secure?",
+    question: "Can I use Smart Inventory for multiple stores?",
     answer:
-      "Yes, all payments go through our secure platform. Funds are held until check-in confirmation, then released to the owner. In case of disputes, our team intervenes to find a solution.",
+      "Yes! Smart Inventory supports multi-location management. Each store gets its own inventory tracking while the central dashboard gives you a unified view across all locations.",
   },
   {
-    question: "What does the damage insurance cover?",
+    question: "How does the geolocation feature work?",
     answer:
-      "Our included insurance covers material damage up to $5,000 per rental. It protects owners against accidental damage. A $200 deductible applies in case of a claim.",
+      "The maps feature uses your store location to visualize customer reach, delivery zones, and competitor proximity. You can adjust the radius to see customer density and optimize your delivery coverage.",
   },
   {
-    question: "Can I cancel a reservation?",
+    question: "Is my data secure?",
     answer:
-      "Cancellation conditions are set by each owner (flexible, moderate, or strict). Refunds are calculated based on these conditions. Force majeure cases may qualify for a full refund.",
+      "Absolutely. All data is encrypted in transit and at rest. We use industry-standard security practices, and your inventory data is never shared with third parties.",
   },
 ]
 
@@ -40,7 +40,7 @@ export function FAQSection() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Frequently asked questions</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Everything you need to know about Homie. Have a question not listed? Contact our support.
+            Everything you need to know about Smart Inventory. Have a question not listed? Contact our support.
           </p>
         </div>
 

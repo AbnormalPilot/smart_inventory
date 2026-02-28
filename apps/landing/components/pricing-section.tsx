@@ -1,82 +1,88 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import { PropertyBookingCard } from "./property-booking-card"
+import { motion } from "framer-motion"
+import { BarChart3, Receipt, Package, Map, Bot, LineChart, ArrowUpRight } from "lucide-react"
 
-const properties = [
+const showcaseItems = [
   {
-    propertyName: "Sunset Beach Villa",
-    location: "Malibu, California",
-    duration: "Min. 3 nights",
-    availableDate: "Available now",
-    image: "/images/property-beach-villa.jpg",
-    pricePerNight: 450,
-    propertyType: "Beachfront Villa",
-    features: ["Ocean View", "Private Beach", "Hot Tub", "Chef Kitchen"],
-    amenities: ["Free Wifi", "Parking", "Pool"],
-    rating: 4.9,
+    title: "Intelligent Dashboard",
+    description: "Real-time KPIs, AI recommendations, and sales trends at a glance.",
+    icon: BarChart3,
+    color: "from-blue-400 to-indigo-500",
+    features: ["Live Revenue", "AI Alerts", "Sales Trends", "Stock Levels"],
   },
   {
-    propertyName: "Mountain Retreat Cabin",
-    location: "Aspen, Colorado",
-    duration: "Min. 2 nights",
-    availableDate: "Dec 15 - Jan 30",
-    image: "/images/property-mountain-cabin.jpg",
-    pricePerNight: 320,
-    propertyType: "Mountain Cabin",
-    features: ["Ski-in/Ski-out", "Fireplace", "Mountain Views", "Game Room"],
-    amenities: ["Free Wifi", "Parking", "4 Guests"],
-    rating: 4.8,
+    title: "Smart Billing",
+    description: "Lightning-fast POS with automatic tax calculation and bill generation.",
+    icon: Receipt,
+    color: "from-emerald-400 to-teal-500",
+    features: ["Quick Search", "Auto Tax", "Discounts", "Print/Email"],
   },
   {
-    propertyName: "Downtown Luxury Loft",
-    location: "New York City, NY",
-    duration: "Min. 1 night",
-    availableDate: "Available now",
-    image: "/images/property-city-loft.jpg",
-    pricePerNight: 280,
-    propertyType: "City Loft",
-    features: ["Skyline View", "Rooftop Access", "Designer Interior", "Central Location"],
-    amenities: ["Free Wifi", "2 Guests", "Parking"],
-    rating: 4.7,
+    title: "Inventory Tracking",
+    description: "Live stock levels with smart alerts for low stock and out-of-stock items.",
+    icon: Package,
+    color: "from-amber-400 to-orange-500",
+    features: ["Real-time Stock", "Low Stock Alerts", "Batch Tracking", "SKU Management"],
   },
   {
-    propertyName: "Tuscan Countryside Estate",
-    location: "Florence, Italy",
-    duration: "Min. 4 nights",
-    availableDate: "Available now",
-    image: "/images/property-tuscan-estate.jpg",
-    pricePerNight: 520,
-    propertyType: "Country Estate",
-    features: ["Vineyard Views", "Private Pool", "Wine Cellar", "Olive Grove"],
-    amenities: ["Free Wifi", "Parking", "8 Guests"],
-    rating: 4.9,
+    title: "Geolocation Maps",
+    description: "Visualize customer reach, delivery zones, and demand hotspots.",
+    icon: Map,
+    color: "from-rose-400 to-pink-500",
+    features: ["Customer Radius", "Delivery Zones", "Heatmaps", "Competitor Intel"],
   },
   {
-    propertyName: "Tropical Paradise Bungalow",
-    location: "Bali, Indonesia",
-    duration: "Min. 2 nights",
-    availableDate: "Available now",
-    image: "/images/property-tropical-bungalow.jpg",
-    pricePerNight: 180,
-    propertyType: "Jungle Bungalow",
-    features: ["Rice Terrace View", "Open Air Living", "Private Garden", "Yoga Deck"],
-    amenities: ["Free Wifi", "Pool", "2 Guests"],
-    rating: 4.8,
+    title: "AI Chat Assistant",
+    description: "Ask questions in plain English — get instant inventory insights.",
+    icon: Bot,
+    color: "from-violet-400 to-purple-500",
+    features: ["Natural Language", "Demand Forecast", "Restock Alerts", "Trend Analysis"],
   },
   {
-    propertyName: "Lakefront Modern House",
-    location: "Lake Tahoe, California",
-    duration: "Min. 3 nights",
-    availableDate: "Year-round",
-    image: "/images/property-lakefront-modern.jpg",
-    pricePerNight: 380,
-    propertyType: "Lakefront Home",
-    features: ["Lake Access", "Private Dock", "Floor-to-ceiling Windows", "Hot Tub"],
-    amenities: ["Free Wifi", "Parking", "6 Guests"],
-    rating: 4.9,
+    title: "Sales Analytics",
+    description: "Detailed breakdowns by day, category, and product with interactive charts.",
+    icon: LineChart,
+    color: "from-cyan-400 to-blue-500",
+    features: ["Weekly Reports", "Category Split", "Growth Metrics", "Export Data"],
   },
 ]
+
+function FeatureCard({ item }: { item: (typeof showcaseItems)[0] }) {
+  const Icon = item.icon
+  return (
+    <div
+      className="rounded-3xl bg-white p-6 h-full flex flex-col"
+      style={{
+        boxShadow:
+          "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px",
+      }}
+    >
+      {/* Icon header */}
+      <div className={`w-full h-40 rounded-2xl bg-gradient-to-br ${item.color} mb-5 flex items-center justify-center relative overflow-hidden`}>
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: "radial-gradient(circle at 30% 70%, white 0%, transparent 50%)"
+        }} />
+        <Icon className="w-12 h-12 text-white relative z-10" strokeWidth={1.5} />
+      </div>
+
+      <div className="flex items-start justify-between mb-2">
+        <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+        <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
+      </div>
+
+      <p className="text-sm text-muted-foreground mb-4 leading-relaxed flex-1">{item.description}</p>
+
+      {/* Feature badges */}
+      <div className="flex flex-wrap gap-1.5">
+        {item.features.map((f, i) => (
+          <span key={i} className="text-xs bg-zinc-100 text-zinc-600 rounded-full px-2.5 py-1">{f}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export function PricingSection() {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -84,13 +90,13 @@ export function PricingSection() {
   const positionRef = useRef(0)
   const animationRef = useRef<number>()
 
-  const duplicatedProperties = [...properties, ...properties, ...properties]
+  const duplicatedItems = [...showcaseItems, ...showcaseItems, ...showcaseItems]
 
   useEffect(() => {
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
-    const speed = isHovered ? 0.3 : 1 // Slow down on hover instead of changing animation duration
+    const speed = isHovered ? 0.3 : 1
     let lastTime = performance.now()
 
     const animate = (currentTime: number) => {
@@ -119,19 +125,19 @@ export function PricingSection() {
   }, [isHovered])
 
   return (
-    <section id="pricing" className="py-32 overflow-hidden">
+    <section id="showcase" className="py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center mb-20">
-        <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Featured properties</h2>
+        <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Feature showcase</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Discover handpicked homes from verified owners. Book with confidence.
+          Explore the tools that make Smart Inventory the most complete retail intelligence platform.
         </p>
       </div>
 
       <div className="relative w-full" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <div ref={scrollRef} className="flex gap-6" style={{ width: "fit-content" }}>
-          {duplicatedProperties.map((property, index) => (
+          {duplicatedItems.map((item, index) => (
             <div key={index} className="flex-shrink-0 w-[85vw] sm:w-[60vw] lg:w-[400px]">
-              <PropertyBookingCard {...property} onBook={() => console.log(`Booking ${property.propertyName}`)} />
+              <FeatureCard item={item} />
             </div>
           ))}
         </div>

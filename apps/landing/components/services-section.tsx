@@ -1,23 +1,23 @@
 "use client"
 
-import { Home, Key, Shield } from "lucide-react"
+import { BarChart3, Brain, Shield } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 
 const services = [
   {
-    icon: Home,
-    title: "Detailed listings",
-    description: "HD photos, 360° virtual tours, and complete descriptions for every property.",
+    icon: BarChart3,
+    title: "Real-time analytics",
+    description: "Live dashboards, sales trends, and inventory levels — always up to date across every product.",
   },
   {
-    icon: Key,
-    title: "Key management",
-    description: "Secure key handover system and real-time check-in/check-out tracking.",
+    icon: Brain,
+    title: "AI demand forecasting",
+    description: "Machine learning predicts what to restock, when to order, and how to avoid costly stockouts.",
   },
   {
     icon: Shield,
-    title: "Secure payments",
-    description: "Protected transactions with tenant guarantee and damage insurance included.",
+    title: "Secure billing",
+    description: "Fast POS with automatic tax calculation, discount management, and one-click bill generation.",
   },
 ]
 
@@ -107,37 +107,38 @@ export function ServicesSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div ref={sectionRef} className="relative px-6 lg:px-8 py-16 lg:py-10 mb-32 overflow-hidden rounded-3xl">
-          {/* Background image that spans full width */}
+          {/* Background — gradient for inventory theme */}
           <div className="absolute inset-0 w-full h-full">
-            <img
-              src="/images/7aecbceb-cbd3-4cbd-901c-dd0125d41525.png"
-              alt="Beautiful house"
-              className={`w-full h-full object-cover transition-transform duration-1000 ease-out ${
+            <div
+              className={`w-full h-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-700 transition-transform duration-1000 ease-out ${
                 isVisible ? "scale-100" : "scale-110"
               }`}
-            />
-            {/* Overlay for better text readability */}
+            >
+              <div className="absolute inset-0 opacity-30" style={{
+                backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.4) 0%, transparent 50%),
+                                 radial-gradient(circle at 70% 60%, rgba(16, 185, 129, 0.3) 0%, transparent 50%)`
+              }} />
+            </div>
             <div className="absolute inset-0 bg-black/20" />
           </div>
 
-          {/* Text content on top */}
+          {/* Text content */}
           <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="order-1 lg:order-2">
               <p className="text-sm uppercase tracking-[0.2em] text-white/80 font-medium mb-4">Our mission</p>
               <h2 className="font-sans md:text-4xl lg:text-5xl font-medium text-white text-balance mb-8 text-5xl">
-                Simplifying peer-to-peer rentals
+                Eliminating inventory chaos for retailers
               </h2>
               <div className="space-y-6 text-white/90 leading-relaxed">
                 <p>
-                  At Homie, we believe renting a home should be as simple as booking a restaurant. Our platform connects
-                  owners and tenants directly, with no agency fees.
+                  At Smart Inventory, we believe managing stock should be as simple as scanning a barcode. Our platform connects
+                  every part of your retail operation — from supplier to shelf to sale.
                 </p>
                 <p>
-                  Every listing is verified, every transaction secured. We've reimagined the rental experience to make
-                  it transparent, fast, and human.
+                  Every product tracked, every transaction secured. We've reimagined inventory management with AI to make
+                  it transparent, fast, and intelligent.
                 </p>
               </div>
-              <div className="mt-10"></div>
             </div>
           </div>
         </div>
@@ -145,7 +146,7 @@ export function ServicesSection() {
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Everything you need</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            A complete platform to manage your rentals from A to Z, whether you're an owner or a tenant.
+            A complete platform to manage your inventory from purchase to sale, whether you run one store or many.
           </p>
         </div>
 

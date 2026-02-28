@@ -62,7 +62,14 @@ export function HeroSection() {
             height: `${heightVh}vh`,
           }}
         >
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/af7687fd-f2ad-4f2a-96f0-b56fa7d3769c-08wERpo5U1sktxs1vcRsJW9ueslNZv.mp4" />
+          {/* Gradient background for inventory/retail theme */}
+          <div className="w-full h-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-700 relative">
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                               radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.2) 0%, transparent 50%),
+                               radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.2) 0%, transparent 50%)`
+            }} />
+          </div>
         </div>
       </div>
 
@@ -78,7 +85,7 @@ export function HeroSection() {
           className="block text-white font-bold text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] tracking-tighter select-none text-center leading-none"
           style={{ marginBottom: "0" }}
         >
-          HOMIE
+          SMART
         </span>
       </div>
 
@@ -88,20 +95,20 @@ export function HeroSection() {
             className={`transition-all duration-1000 delay-[800ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
             <h1 className="font-serif text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] xl:text-[7.5rem] 2xl:text-[8.5rem] font-normal leading-tight mb-6 w-full px-4 max-w-6xl mx-auto text-balance">
-              <AnimatedText text="Find your home away from home" delay={0.3} />
+              <AnimatedText text="Inventory Optimization Reinvented" delay={0.3} />
             </h1>
           </div>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-8">
-          <div className="relative">
-            <div
-              className={`relative w-[234px] md:w-[281px] lg:w-[351px] will-change-transform transition-all duration-[1500ms] ease-out delay-500 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[400px]"
-              }`}
-            >
-              <img src="/images/iphone-frame.png" alt="Application Homie" className="w-full h-auto relative z-10" />
-            </div>
+          <div
+            className={`transition-all duration-[1500ms] ease-out delay-500 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
+            <p className="text-center text-muted-foreground max-w-xl mx-auto text-lg leading-relaxed">
+              AI-powered retail intelligence for small businesses — demand forecasting, smart billing, and real-time analytics.
+            </p>
           </div>
         </div>
       </div>

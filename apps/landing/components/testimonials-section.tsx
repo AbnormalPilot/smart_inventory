@@ -5,42 +5,42 @@ import Image from "next/image"
 
 const testimonials = [
   {
-    name: "Marie Dupont",
-    role: "Owner in Nice",
-    content: "I rented out my apartment in less than a week. The interface is so intuitive!",
+    name: "Rajesh Sharma",
+    role: "Grocery Store Owner, Mumbai",
+    content: "Smart Inventory cut my stockouts by 80%. The AI predictions are remarkably accurate!",
     avatar: "/placeholder.svg?height=48&width=48",
   },
   {
-    name: "Thomas Martin",
-    role: "Tenant in Paris",
-    content: "Finally a transparent platform. I found my studio without paying agency fees.",
+    name: "Priya Patel",
+    role: "Pharmacy Owner, Delhi",
+    content: "The billing system is lightning fast. My checkout queue has basically disappeared.",
     avatar: "/placeholder.svg?height=48&width=48",
   },
   {
-    name: "Sophie Bernard",
-    role: "Owner in Lyon",
-    content: "The tenant verification system gives me peace of mind. I recommend it 100%!",
+    name: "Amit Kumar",
+    role: "Electronics Retailer, Bangalore",
+    content: "The geolocation feature helped me identify a delivery zone I was completely missing. Revenue up 30%!",
     avatar: "/placeholder.svg?height=48&width=48",
   },
 ]
 
 const testimonials2 = [
   {
-    name: "Lucas Petit",
-    role: "Tenant in Bordeaux",
-    content: "Best rental experience I've ever had. The process was seamless from start to finish.",
+    name: "Sneha Desai",
+    role: "Fashion Boutique, Pune",
+    content: "Best inventory tool I've used. The AI chat assistant feels like having a business analyst on call 24/7.",
     avatar: "/placeholder.svg?height=48&width=48",
   },
   {
-    name: "Emma Laurent",
-    role: "Owner in Marseille",
-    content: "My property was listed and rented within days. Incredible platform!",
+    name: "Vikram Singh",
+    role: "Supermarket Chain, Jaipur",
+    content: "We manage 5 stores with Smart Inventory. The dashboard gives me a real-time pulse of every location.",
     avatar: "/placeholder.svg?height=48&width=48",
   },
   {
-    name: "Antoine Rousseau",
-    role: "Tenant in Toulouse",
-    content: "No hidden fees, no surprises. Exactly what I was looking for in a rental app.",
+    name: "Meera Joshi",
+    role: "Bakery Owner, Hyderabad",
+    content: "No more wasted ingredients. The demand forecasting alone paid for itself in the first month.",
     avatar: "/placeholder.svg?height=48&width=48",
   },
 ]
@@ -127,7 +127,6 @@ export function TestimonialsSection() {
         </div>
 
         <div className="space-y-6">
-          {/* First row - scrolls left to right */}
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
@@ -167,7 +166,6 @@ export function TestimonialsSection() {
             </div>
           </div>
 
-          {/* Second row - scrolls right to left */}
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />

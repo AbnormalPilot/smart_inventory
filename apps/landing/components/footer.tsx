@@ -1,19 +1,18 @@
 import Link from "next/link"
-import { Twitter, Linkedin, Instagram, Facebook } from "lucide-react"
-import Image from "next/image"
+import { Twitter, Linkedin, Instagram, Facebook, Package } from "lucide-react"
 
 const footerLinks = {
   product: [
-    { label: "Search", href: "#" },
-    { label: "List", href: "#" },
-    { label: "Pricing", href: "#" },
-    { label: "App", href: "#" },
+    { label: "Dashboard", href: "#features" },
+    { label: "Billing", href: "#features" },
+    { label: "Inventory", href: "#features" },
+    { label: "Maps", href: "#features" },
   ],
   company: [
     { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press", href: "#" },
-    { label: "Blog", href: "#" },
+    { label: "Mission", href: "#how-it-works" },
+    { label: "Showcase", href: "#showcase" },
+    { label: "Reviews", href: "#testimonials" },
   ],
   legal: [
     { label: "Terms", href: "#" },
@@ -24,8 +23,8 @@ const footerLinks = {
   support: [
     { label: "Help Center", href: "#" },
     { label: "Contact", href: "#" },
-    { label: "FAQ", href: "#" },
-    { label: "Report", href: "#" },
+    { label: "FAQ", href: "#faq" },
+    { label: "Dashboard", href: "http://localhost:3001" },
   ],
 }
 
@@ -33,12 +32,12 @@ export function Footer() {
   return (
     <div className="relative">
       <div className="absolute -top-[20vw] left-0 right-0 w-full h-[50vw] z-0 overflow-hidden">
-        <Image src="/images/footer-bg.png" alt="Tuscan landscape" fill className="object-cover" priority />
+        <div className="w-full h-full bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-600" />
       </div>
 
       <div className="absolute -top-[15vw] left-0 right-0 flex items-end justify-center overflow-visible pointer-events-none z-10">
         <h2 className="font-bold text-center text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] leading-[0.85] tracking-tighter text-white whitespace-nowrap">
-          HOMIE
+          SMART
         </h2>
       </div>
 
@@ -47,19 +46,10 @@ export function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
             <div className="col-span-2 md:col-span-1">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <svg
-                  className="w-5 h-5 text-foreground"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                <span className="text-base font-medium text-foreground">Homie</span>
+                <Package className="w-5 h-5 text-foreground" />
+                <span className="text-base font-medium text-foreground">Smart Inventory</span>
               </Link>
-              <p className="text-sm text-muted-foreground mb-6">Peer-to-peer rentals, simplified.</p>
+              <p className="text-sm text-muted-foreground mb-6">AI-powered retail intelligence, simplified.</p>
               <div className="flex gap-4">
                 <Link
                   href="#"
@@ -93,12 +83,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {footerLinks.product.map((link, i) => (
                   <li key={i}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -109,12 +94,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {footerLinks.company.map((link, i) => (
                   <li key={i}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -125,12 +105,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {footerLinks.legal.map((link, i) => (
                   <li key={i}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -141,12 +116,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {footerLinks.support.map((link, i) => (
                   <li key={i}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -154,8 +124,8 @@ export function Footer() {
           </div>
 
           <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-muted-foreground">© 2026 Homie. All rights reserved.</p>
-            <p className="text-xs text-muted-foreground">Homie Inc. - Registered real estate agent</p>
+            <p className="text-xs text-muted-foreground">&copy; 2026 Smart Inventory. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">Smart Inventory - Built for hackathon</p>
           </div>
         </div>
       </footer>
