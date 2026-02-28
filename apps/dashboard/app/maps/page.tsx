@@ -1,17 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import dynamic from "next/dynamic"
+import { io, Socket } from "socket.io-client"
 import { useGeolocation } from "@/hooks/use-geolocation"
 import { RadiusControl } from "@/components/maps/radius-control"
 import { DemandUpload } from "@/components/maps/demand-upload"
 import { DemandStats } from "@/components/maps/demand-stats"
-import { DemandForecast, ForecastToggle } from "@/components/maps/demand-forecast"
 import { TimeFilter } from "@/components/maps/time-filter"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { AlertCircle, Map, Flame } from "lucide-react"
+import { AlertCircle, Map, Flame, Radio } from "lucide-react"
 
 const API_BASE = ""
 
@@ -20,10 +20,20 @@ const LeafletMap = dynamic(() => import("@/components/maps/leaflet-map"), {
   loading: () => <Skeleton className="absolute inset-0" />,
 })
 
+interface LiveEvent {
+  lat: number
+  lng: number
+  intensity: number
+  product: string
+  category: string
+  quantity: number
+  time: string
+  id: string
+}
+
 export default function MapsPage() {
   const [radius, setRadius] = useState(5)
   const [viewMode, setViewMode] = useState<"radius" | "heatmap">("heatmap")
-  const [forecastOpen, setForecastOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
   const [demandPoints, setDemandPoints] = useState<Array<[number, number, number]>>([])
   const [timeRange, setTimeRange] = useState<[number, number] | null>(null)
@@ -32,6 +42,11 @@ export default function MapsPage() {
     start: null,
     end: null,
   })
+  const [liveCount, setLiveCount] = useState(0)
+  const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([])
+  const [livePulses, setLivePulses] = useState<Array<{ lat: number; lng: number; id: string }>>([])
+  const [connected, setConnected] = useState(false)
+  const eventIdRef = useRef(0)
   const { latitude, longitude, error, loading } = useGeolocation()
 
   const fetchHeatmapData = useCallback(() => {
@@ -56,6 +71,42 @@ export default function MapsPage() {
   useEffect(() => {
     fetchHeatmapData()
   }, [fetchHeatmapData, refreshKey])
+
+  // Socket.IO connection
+  useEffect(() => {
+    const socket: Socket = io("http://localhost:6000")
+
+    socket.on("connect", () => setConnected(true))
+    socket.on("disconnect", () => setConnected(false))
+
+    socket.on("demand:new-events", (events: Omit<LiveEvent, "id">[]) => {
+      const tagged = events.map((e) => ({
+        ...e,
+        id: `live-${++eventIdRef.current}`,
+      }))
+
+      // Append to heatmap with boosted intensity so live events are visible
+      const newPoints: Array<[number, number, number]> = tagged.map((e) => [
+        e.lat,
+        e.lng,
+        1.0, // max intensity so new dots stand out
+      ])
+      setDemandPoints((prev) => [...prev, ...newPoints])
+      setLiveCount((prev) => prev + events.length)
+
+      // Pulse markers on map (animated rings)
+      setLivePulses((prev) =>
+        [...prev, ...tagged.map((e) => ({ lat: e.lat, lng: e.lng, id: e.id }))].slice(-20)
+      )
+
+      // Update live feed (keep last 5)
+      setLiveEvents((prev) => [...tagged, ...prev].slice(0, 5))
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
 
   function handleUploadComplete() {
     setRefreshKey((k) => k + 1)
@@ -85,9 +136,10 @@ export default function MapsPage() {
           radiusKm={radius}
           showRadius={viewMode === "radius"}
           demandPoints={demandPoints}
+          livePulses={livePulses}
         />
 
-        {/* Top bar — view toggle + filters, all inline */}
+        {/* Top bar — view toggle + filters + LIVE badge */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-1 bg-background/80 backdrop-blur-md rounded-lg p-1 shadow-lg border">
           <Button
             variant={viewMode === "radius" ? "default" : "ghost"}
@@ -123,6 +175,33 @@ export default function MapsPage() {
             dateRange={dateRange}
             onDateChange={setDateRange}
           />
+
+          {/* Separator */}
+          <div className="w-px h-5 bg-border mx-0.5" />
+
+          {/* LIVE badge */}
+          <div className="flex items-center gap-1.5 px-2">
+            <span className="relative flex h-2 w-2">
+              <span
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                  connected ? "bg-green-400" : "bg-red-400"
+                }`}
+              />
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${
+                  connected ? "bg-green-500" : "bg-red-500"
+                }`}
+              />
+            </span>
+            <span className="text-[10px] font-semibold tracking-wider uppercase">
+              Live
+            </span>
+            {liveCount > 0 && (
+              <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+                +{liveCount}
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Upload panel — top right */}
@@ -135,20 +214,32 @@ export default function MapsPage() {
           <DemandStats refreshKey={refreshKey} />
         </div>
 
-        {/* Forecast toggle — middle right */}
-        <div className="absolute top-1/2 right-3 -translate-y-1/2 z-[1000]">
-          <ForecastToggle
-            open={forecastOpen}
-            onClick={() => setForecastOpen(!forecastOpen)}
-          />
-        </div>
-
-        {/* Forecast slide-out panel */}
-        <DemandForecast
-          open={forecastOpen}
-          onClose={() => setForecastOpen(false)}
-          refreshKey={refreshKey}
-        />
+        {/* Live event feed — bottom right */}
+        {liveEvents.length > 0 && (
+          <div className="absolute bottom-4 right-3 z-[1000] w-56 space-y-1.5">
+            {liveEvents.map((evt, i) => (
+              <div
+                key={evt.id}
+                className="bg-background/85 backdrop-blur-md border rounded-lg px-3 py-2 shadow-md animate-in fade-in slide-in-from-right-3 duration-300"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Radio className="h-3 w-3 text-green-500 shrink-0" />
+                    <span className="text-xs font-medium truncate">{evt.product}</span>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground shrink-0">
+                    x{evt.quantity}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-0.5">
+                  <span className="text-[10px] text-muted-foreground">{evt.category}</span>
+                  <span className="text-[10px] text-muted-foreground">{evt.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Radius control — only visible in radius mode */}
         {viewMode === "radius" && (

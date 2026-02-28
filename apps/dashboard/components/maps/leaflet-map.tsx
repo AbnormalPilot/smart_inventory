@@ -25,52 +25,135 @@ function MapUpdater({ center }: { center: [number, number] }) {
   return null
 }
 
+interface HeatLayer extends L.Layer {
+  setLatLngs(latlngs: Array<[number, number, number]>): this
+  redraw(): this
+}
+
 function HeatmapLayer({ points }: { points: Array<[number, number, number]> }) {
   const map = useMap()
-  const layerRef = useRef<L.Layer | null>(null)
+  const layerRef = useRef<HeatLayer | null>(null)
   const hasFitted = useRef(false)
 
   useEffect(() => {
-    if (layerRef.current) {
-      map.removeLayer(layerRef.current)
+    if (points.length === 0) {
+      if (layerRef.current) {
+        map.removeLayer(layerRef.current)
+        layerRef.current = null
+      }
+      return
     }
 
-    if (points.length === 0) return
+    if (layerRef.current) {
+      // Update existing layer in-place — no flicker
+      layerRef.current.setLatLngs(points)
+      layerRef.current.redraw()
+    } else {
+      const heat = (L as unknown as {
+        heatLayer: (
+          latlngs: Array<[number, number, number]>,
+          options?: Record<string, unknown>
+        ) => HeatLayer
+      }).heatLayer(points, {
+        radius: 25,
+        blur: 15,
+        maxZoom: 17,
+        max: 1.0,
+        gradient: {
+          0.2: "#2563eb",
+          0.4: "#06b6d4",
+          0.6: "#22c55e",
+          0.8: "#eab308",
+          1.0: "#ef4444",
+        },
+      })
 
-    const heat = (L as unknown as {
-      heatLayer: (
-        latlngs: Array<[number, number, number]>,
-        options?: Record<string, unknown>
-      ) => L.Layer
-    }).heatLayer(points, {
-      radius: 25,
-      blur: 15,
-      maxZoom: 17,
-      max: 1.0,
-      gradient: {
-        0.2: "#2563eb",
-        0.4: "#06b6d4",
-        0.6: "#22c55e",
-        0.8: "#eab308",
-        1.0: "#ef4444",
-      },
-    })
+      heat.addTo(map)
+      layerRef.current = heat
+    }
 
-    heat.addTo(map)
-    layerRef.current = heat
-
-    if (!hasFitted.current && points.length > 0) {
+    if (!hasFitted.current) {
       const bounds = L.latLngBounds(points.map(([lat, lng]) => [lat, lng] as [number, number]))
       map.fitBounds(bounds, { padding: [40, 40] })
       hasFitted.current = true
     }
+  }, [map, points])
 
+  useEffect(() => {
     return () => {
       if (layerRef.current) {
         map.removeLayer(layerRef.current)
+        layerRef.current = null
       }
     }
-  }, [map, points])
+  }, [map])
+
+  return null
+}
+
+// ─── Live pulse markers — animated rings that fade out ─────────
+function LivePulseMarkers({ pulses }: { pulses: Array<{ lat: number; lng: number; id: string }> }) {
+  const map = useMap()
+  const markersRef = useRef<Map<string, L.CircleMarker>>(new Map())
+
+  useEffect(() => {
+    const current = markersRef.current
+
+    // Add new pulses
+    for (const p of pulses) {
+      if (current.has(p.id)) continue
+
+      const marker = L.circleMarker([p.lat, p.lng], {
+        radius: 6,
+        color: "#ef4444",
+        fillColor: "#ef4444",
+        fillOpacity: 0.8,
+        weight: 2,
+        opacity: 1,
+      }).addTo(map)
+
+      current.set(p.id, marker)
+
+      // Animate: grow radius and fade out over 4 seconds
+      let frame = 0
+      const totalFrames = 80 // ~4s at 50ms/frame
+      const interval = setInterval(() => {
+        frame++
+        const progress = frame / totalFrames
+        const r = 6 + progress * 30
+        const opacity = 1 - progress
+
+        marker.setRadius(r)
+        marker.setStyle({
+          fillOpacity: opacity * 0.6,
+          opacity: opacity,
+        })
+
+        if (frame >= totalFrames) {
+          clearInterval(interval)
+          map.removeLayer(marker)
+          current.delete(p.id)
+        }
+      }, 50)
+    }
+
+    // Trim old entries beyond 20
+    if (current.size > 20) {
+      const keys = Array.from(current.keys())
+      for (let i = 0; i < keys.length - 20; i++) {
+        const m = current.get(keys[i])
+        if (m) map.removeLayer(m)
+        current.delete(keys[i])
+      }
+    }
+  }, [map, pulses])
+
+  useEffect(() => {
+    return () => {
+      markersRef.current.forEach((m) => map.removeLayer(m))
+      markersRef.current.clear()
+    }
+  }, [map])
 
   return null
 }
@@ -182,6 +265,7 @@ interface LeafletMapProps {
   radiusKm: number
   showRadius?: boolean
   demandPoints?: Array<[number, number, number]>
+  livePulses?: Array<{ lat: number; lng: number; id: string }>
 }
 
 export default function LeafletMap({
@@ -190,6 +274,7 @@ export default function LeafletMap({
   radiusKm,
   showRadius = false,
   demandPoints = [],
+  livePulses = [],
 }: LeafletMapProps) {
   const center: [number, number] = [latitude, longitude]
 
@@ -218,6 +303,7 @@ export default function LeafletMap({
         />
       )}
       {demandPoints.length > 0 && <HeatmapLayer points={demandPoints} />}
+      {livePulses.length > 0 && <LivePulseMarkers pulses={livePulses} />}
       <ClickPopupHandler />
       <MapUpdater center={center} />
     </MapContainer>
