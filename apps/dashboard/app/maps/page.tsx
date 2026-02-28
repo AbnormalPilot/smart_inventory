@@ -6,7 +6,7 @@ import { io, Socket } from "socket.io-client"
 import { useGeolocation } from "@/hooks/use-geolocation"
 import { RadiusControl } from "@/components/maps/radius-control"
 import { DemandUpload } from "@/components/maps/demand-upload"
-import { DemandStats } from "@/components/maps/demand-stats"
+import { DemandStats, type LiveStats } from "@/components/maps/demand-stats"
 import { TimeFilter } from "@/components/maps/time-filter"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -45,6 +45,7 @@ export default function MapsPage() {
   const [liveCount, setLiveCount] = useState(0)
   const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([])
   const [livePulses, setLivePulses] = useState<Array<{ lat: number; lng: number; id: string }>>([])
+  const [liveStats, setLiveStats] = useState<LiveStats>({ events: 0, quantity: 0, products: {} })
   const [connected, setConnected] = useState(false)
   const eventIdRef = useRef(0)
   const { latitude, longitude, error, loading } = useGeolocation()
@@ -102,8 +103,18 @@ export default function MapsPage() {
       // Update live feed (keep last 5)
       setLiveEvents((prev) => [...tagged, ...prev].slice(0, 5))
 
-      // Bump refreshKey so DemandStats re-fetches
-      setRefreshKey((k) => k + 1)
+      // Accumulate live stats for DemandStats card
+      setLiveStats((prev) => {
+        const products = { ...prev.products }
+        for (const e of events) {
+          products[e.product] = (products[e.product] ?? 0) + e.quantity
+        }
+        return {
+          events: prev.events + events.length,
+          quantity: prev.quantity + events.reduce((s, e) => s + e.quantity, 0),
+          products,
+        }
+      })
     })
 
     return () => {
@@ -214,7 +225,7 @@ export default function MapsPage() {
 
         {/* Stats overlay — bottom left */}
         <div className="absolute bottom-4 left-3 z-[1000]">
-          <DemandStats refreshKey={refreshKey} />
+          <DemandStats refreshKey={refreshKey} liveStats={liveStats} />
         </div>
 
         {/* Live event feed — bottom right */}
