@@ -49,7 +49,7 @@ export function Cart({ items, onUpdateQuantity, onRemove }: CartProps) {
                   <p className="text-xs text-muted-foreground">{item.sku}</p>
                 </div>
               </TableCell>
-              <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
+              <TableCell className="text-right">₹{item.price.toFixed(2)}</TableCell>
               <TableCell>
                 <div className="flex items-center justify-center gap-1">
                   <Button

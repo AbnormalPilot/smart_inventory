@@ -66,7 +66,7 @@ export function ProductSearch({ onSelect }: ProductSearchProps) {
                 <div>
                   <p className="font-medium text-sm">{product.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    SKU: {product.sku} | ${product.price.toFixed(2)}
+                    SKU: {product.sku} | ₹{product.price.toFixed(2)}
                   </p>
                 </div>
                 <Badge variant={product.quantity > 0 ? "secondary" : "destructive"} className="text-xs">

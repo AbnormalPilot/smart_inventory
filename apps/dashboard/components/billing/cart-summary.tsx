@@ -101,7 +101,7 @@ export function CartSummary({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>Subtotal ({itemCount} items)</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>₹{subtotal.toFixed(2)}</span>
           </div>
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">Tax %</Label>
@@ -114,10 +114,10 @@ export function CartSummary({
               onChange={(e) => onTaxRateChange(parseFloat(e.target.value) || 0)}
               className="h-8 w-20"
             />
-            <span className="text-sm ml-auto">${tax.toFixed(2)}</span>
+            <span className="text-sm ml-auto">₹{tax.toFixed(2)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Label className="text-sm">Discount $</Label>
+            <Label className="text-sm">Discount ₹</Label>
             <Input
               type="number"
               min="0"
@@ -126,12 +126,12 @@ export function CartSummary({
               onChange={(e) => onDiscountChange(parseFloat(e.target.value) || 0)}
               className="h-8 w-20"
             />
-            <span className="text-sm ml-auto">-${discount.toFixed(2)}</span>
+            <span className="text-sm ml-auto">-₹{discount.toFixed(2)}</span>
           </div>
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>${grandTotal.toFixed(2)}</span>
+            <span>₹{grandTotal.toFixed(2)}</span>
           </div>
         </div>
       </CardContent>

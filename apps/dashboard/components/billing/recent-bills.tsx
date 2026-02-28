@@ -74,7 +74,7 @@ export function RecentBills({ refreshKey }: RecentBillsProps) {
                     <TableCell className="text-sm">
                       {sale.items.length} item{sale.items.length > 1 ? "s" : ""}
                     </TableCell>
-                    <TableCell className="font-medium">${sale.grandTotal.toFixed(2)}</TableCell>
+                    <TableCell className="font-medium">₹{sale.grandTotal.toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{sale.paymentMethod}</Badge>
                     </TableCell>

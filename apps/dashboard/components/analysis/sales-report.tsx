@@ -37,9 +37,9 @@ export function SalesReport() {
       <CardHeader>
         <CardTitle>Sales Report (Last 30 Days)</CardTitle>
         <div className="flex gap-6 text-sm text-muted-foreground">
-          <span>Revenue: <strong className="text-foreground">${totalRevenue.toFixed(2)}</strong></span>
+          <span>Revenue: <strong className="text-foreground">₹{totalRevenue.toFixed(2)}</strong></span>
           <span>Orders: <strong className="text-foreground">{totalOrders}</strong></span>
-          <span>Avg: <strong className="text-foreground">${totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : "0.00"}</strong></span>
+          <span>Avg: <strong className="text-foreground">₹{totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : "0.00"}</strong></span>
         </div>
       </CardHeader>
       <CardContent>

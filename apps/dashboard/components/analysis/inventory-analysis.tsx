@@ -51,9 +51,9 @@ export function InventoryAnalysis() {
           <CardTitle>Inventory Value by Category</CardTitle>
           {data?.totals && (
             <div className="flex gap-6 text-sm text-muted-foreground">
-              <span>Retail: <strong className="text-foreground">${data.totals.retailValue.toFixed(2)}</strong></span>
-              <span>Cost: <strong className="text-foreground">${data.totals.costValue.toFixed(2)}</strong></span>
-              <span>Margin: <strong className="text-foreground">${(data.totals.retailValue - data.totals.costValue).toFixed(2)}</strong></span>
+              <span>Retail: <strong className="text-foreground">₹{data.totals.retailValue.toFixed(2)}</strong></span>
+              <span>Cost: <strong className="text-foreground">₹{data.totals.costValue.toFixed(2)}</strong></span>
+              <span>Margin: <strong className="text-foreground">₹{(data.totals.retailValue - data.totals.costValue).toFixed(2)}</strong></span>
             </div>
           )}
         </CardHeader>
@@ -103,10 +103,10 @@ export function InventoryAnalysis() {
                       <TableCell className="font-medium">{cat.category}</TableCell>
                       <TableCell className="text-right">{cat.productCount}</TableCell>
                       <TableCell className="text-right">{cat.totalUnits}</TableCell>
-                      <TableCell className="text-right">${cat.totalCostValue.toFixed(2)}</TableCell>
-                      <TableCell className="text-right">${cat.totalRetailValue.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">₹{cat.totalCostValue.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">₹{cat.totalRetailValue.toFixed(2)}</TableCell>
                       <TableCell className="text-right font-medium">
-                        ${(cat.totalRetailValue - cat.totalCostValue).toFixed(2)}
+                        ₹{(cat.totalRetailValue - cat.totalCostValue).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}

@@ -47,7 +47,7 @@ export function TopProducts() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium truncate mr-2">{product.name}</span>
                   <span className="text-muted-foreground whitespace-nowrap">
-                    ${product.totalRevenue.toFixed(2)}
+                    ₹{product.totalRevenue.toFixed(2)}
                   </span>
                 </div>
                 <Progress value={(product.totalRevenue / maxRevenue) * 100} className="h-2" />

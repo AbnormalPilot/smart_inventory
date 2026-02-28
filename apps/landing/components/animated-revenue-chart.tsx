@@ -69,7 +69,7 @@ export function AnimatedRevenueChart() {
             animate={{ opacity: 1, y: 0 }}
             className="text-2xl font-bold text-slate-900"
           >
-            ${totalRevenue.toLocaleString()}
+            ₹{totalRevenue.toLocaleString()}
           </motion.p>
           <motion.div
             key={growth}
@@ -163,7 +163,7 @@ export function AnimatedRevenueChart() {
                   animate={{ opacity: 1 }}
                   className="text-sm font-semibold text-slate-900 block"
                 >
-                  ${item.value.toLocaleString()}
+                  ₹{item.value.toLocaleString()}
                 </motion.span>
                 <span className="text-xs text-slate-400">{percentage}%</span>
               </div>

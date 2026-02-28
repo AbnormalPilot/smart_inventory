@@ -77,8 +77,8 @@ export function BillPreview({ open, onOpenChange, sale }: BillPreviewProps) {
                     <p className="text-xs text-muted-foreground">{item.sku as string}</p>
                   </td>
                   <td className="text-right py-1">{item.quantity as number}</td>
-                  <td className="text-right py-1">${(item.unitPrice as number).toFixed(2)}</td>
-                  <td className="text-right py-1">${(item.total as number).toFixed(2)}</td>
+                  <td className="text-right py-1">₹{(item.unitPrice as number).toFixed(2)}</td>
+                  <td className="text-right py-1">₹{(item.total as number).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -89,24 +89,24 @@ export function BillPreview({ open, onOpenChange, sale }: BillPreviewProps) {
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${(sale.subtotal as number).toFixed(2)}</span>
+              <span>₹{(sale.subtotal as number).toFixed(2)}</span>
             </div>
             {(sale.taxRate as number) > 0 && (
               <div className="flex justify-between">
                 <span>Tax ({sale.taxRate as number}%)</span>
-                <span>${(sale.tax as number).toFixed(2)}</span>
+                <span>₹{(sale.tax as number).toFixed(2)}</span>
               </div>
             )}
             {(sale.discount as number) > 0 && (
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>-${(sale.discount as number).toFixed(2)}</span>
+                <span>-₹{(sale.discount as number).toFixed(2)}</span>
               </div>
             )}
             <Separator />
             <div className="flex justify-between text-lg font-bold">
               <span>Grand Total</span>
-              <span>${(sale.grandTotal as number).toFixed(2)}</span>
+              <span>₹{(sale.grandTotal as number).toFixed(2)}</span>
             </div>
           </div>
 

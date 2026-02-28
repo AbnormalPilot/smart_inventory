@@ -67,7 +67,7 @@ export function RecentSales() {
                     <TableCell className="text-sm max-w-[150px] truncate">
                       {sale.items.map((i) => i.productName).join(", ")}
                     </TableCell>
-                    <TableCell className="font-medium">${sale.grandTotal.toFixed(2)}</TableCell>
+                    <TableCell className="font-medium">₹{sale.grandTotal.toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{sale.paymentMethod}</Badge>
                     </TableCell>

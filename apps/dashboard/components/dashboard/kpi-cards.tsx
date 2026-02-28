@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { DollarSign, ShoppingCart, Package, AlertTriangle } from "lucide-react"
+import { IndianRupee, ShoppingCart, Package, AlertTriangle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { apiFetch } from "@/lib/api"
@@ -42,9 +42,9 @@ export function KpiCards() {
   const stats = [
     {
       title: "Total Revenue",
-      value: `$${(data?.totalRevenue || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
-      sub: `$${(data?.todayRevenue || 0).toFixed(2)} today`,
-      icon: DollarSign,
+      value: `₹${(data?.totalRevenue || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
+      sub: `₹${(data?.todayRevenue || 0).toFixed(2)} today`,
+      icon: IndianRupee,
       color: "text-green-500",
     },
     {
@@ -57,7 +57,7 @@ export function KpiCards() {
     {
       title: "Total Products",
       value: String(data?.totalProducts || 0),
-      sub: `$${(data?.inventoryValue || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })} value`,
+      sub: `₹${(data?.inventoryValue || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })} value`,
       icon: Package,
       color: "text-purple-500",
     },

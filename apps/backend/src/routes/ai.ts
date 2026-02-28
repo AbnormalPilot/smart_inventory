@@ -64,7 +64,7 @@ router.get("/ai/recommendations", async (_req: Request, res: Response) => {
       recommendations.push({
         type: "trending",
         title: `Trending: ${p.name}`,
-        description: `Sold ${p.totalQty} units ($${p.totalRevenue.toFixed(2)} revenue) in the last 7 days. Keep stock levels high.`,
+        description: `Sold ${p.totalQty} units (₹${p.totalRevenue.toFixed(2)} revenue) in the last 7 days. Keep stock levels high.`,
         priority: "medium",
       });
     }
@@ -185,7 +185,7 @@ router.post("/ai/chat", async (req: Request, res: Response) => {
       const today = todayData[0] || { total: 0, count: 0 };
       const month = monthData[0] || { total: 0, count: 0 };
 
-      response = `💰 **Sales Summary**\n\n**Today:**\n- Revenue: $${today.total.toFixed(2)}\n- Orders: ${today.count}\n\n**This Month:**\n- Revenue: $${month.total.toFixed(2)}\n- Orders: ${month.count}\n- Avg order: $${month.count > 0 ? (month.total / month.count).toFixed(2) : "0.00"}`;
+      response = `💰 **Sales Summary**\n\n**Today:**\n- Revenue: ₹${today.total.toFixed(2)}\n- Orders: ${today.count}\n\n**This Month:**\n- Revenue: ₹${month.total.toFixed(2)}\n- Orders: ${month.count}\n- Avg order: ₹${month.count > 0 ? (month.total / month.count).toFixed(2) : "0.00"}`;
       suggestions.push("Show inventory status", "Show top products", "What should I restock?");
     } else if (lowerMsg.includes("recommend") || lowerMsg.includes("restock") || lowerMsg.includes("suggest")) {
       const lowStock = await Product.find({
@@ -285,7 +285,7 @@ router.post("/ai/analyze-csv", upload.single("file"), async (req: Request, res: 
       const priceCol = headers.indexOf("price") !== -1 ? headers.indexOf("price") : headers.indexOf("cost");
       const prices = dataRows.map((row) => parseFloat(row.split(",")[priceCol]) || 0);
       const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-      insights.push(`Average price: $${avg.toFixed(2)}`);
+      insights.push(`Average price: ₹${avg.toFixed(2)}`);
     }
 
     if (headers.includes("category") || headers.includes("type")) {

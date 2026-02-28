@@ -1,6 +1,6 @@
 "use client"
 
-import { Package, AlertTriangle, Layers, DollarSign } from "lucide-react"
+import { Package, AlertTriangle, Layers, IndianRupee } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface InventoryStatsProps {
@@ -15,7 +15,7 @@ export function InventoryStats({ totalProducts, lowStockCount, categoriesCount, 
     { title: "Total Products", value: totalProducts, icon: Package, color: "text-blue-500" },
     { title: "Low Stock", value: lowStockCount, icon: AlertTriangle, color: "text-red-500" },
     { title: "Categories", value: categoriesCount, icon: Layers, color: "text-green-500" },
-    { title: "Inventory Value", value: `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: DollarSign, color: "text-yellow-500" },
+    { title: "Inventory Value", value: `₹${totalValue.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`, icon: IndianRupee, color: "text-yellow-500" },
   ]
 
   return (
