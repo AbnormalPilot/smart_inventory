@@ -1,0 +1,10 @@
+# Core dependencies (fast install)
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+motor==3.7.0
+pandas==2.2.3
+pydantic-settings==2.7.1
+
+# ML dependencies (heavy — install via `npm run setup:ml`)
+# torch (CPU) — install with: pip install torch --index-url https://download.pytorch.org/whl/cpu
+# chronos-forecasting — install with: pip install chronos-forecasting

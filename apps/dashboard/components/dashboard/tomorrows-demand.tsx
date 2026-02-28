@@ -7,11 +7,25 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { apiFetch } from "@/lib/api"
 
-interface ForecastData {
+interface StatisticalForecast {
   trend: { direction: "up" | "down"; percentage: number }
   topProducts: Array<{ product: string; totalQty: number; category: string }>
   dayOfWeek: Array<{ day: number; totalQty: number }>
   peakHours: Array<{ hour: number; totalQty: number }>
+}
+
+interface AIPrediction {
+  date: string
+  predicted_quantity: number
+  lower_bound: number
+  upper_bound: number
+}
+
+interface AIForecast {
+  entity: string
+  predictions: AIPrediction[]
+  total_predicted: number
+  avg_daily: number
 }
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -24,12 +38,29 @@ function formatHour(hour: number) {
 }
 
 export function TomorrowsDemand() {
-  const [forecast, setForecast] = useState<ForecastData | null>(null)
+  const [forecast, setForecast] = useState<StatisticalForecast | null>(null)
+  const [aiPrediction, setAiPrediction] = useState<AIPrediction | null>(null)
+  const [source, setSource] = useState<"chronos" | "statistical">("statistical")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    apiFetch<ForecastData>("/demand/forecast?days=7")
-      .then(setForecast)
+    // Try AI forecast first, fall back to statistical
+    Promise.all([
+      apiFetch<StatisticalForecast>("/demand/forecast?days=7"),
+      apiFetch<AIForecast | { fallback: true }>("/ai-forecast/overall", {
+        method: "POST",
+        body: JSON.stringify({ horizon: 7 }),
+      }).catch(() => null),
+    ])
+      .then(([statistical, aiData]) => {
+        setForecast(statistical)
+
+        if (aiData && !("fallback" in aiData) && aiData.predictions?.length > 0) {
+          // Use the first prediction (tomorrow)
+          setAiPrediction(aiData.predictions[0])
+          setSource("chronos")
+        }
+      })
       .catch(() => {})
       .finally(() => setIsLoading(false))
   }, [])
@@ -37,14 +68,24 @@ export function TomorrowsDemand() {
   const tomorrowDay = (new Date().getDay() + 1) % 7
   const tomorrowName = DAY_NAMES[tomorrowDay]
   const dayData = forecast?.dayOfWeek.find((d) => d.day === tomorrowDay)
-  const predictedUnits = dayData?.totalQty ?? 0
+
+  // Use AI prediction if available, otherwise statistical
+  const predictedUnits = aiPrediction
+    ? Math.round(aiPrediction.predicted_quantity)
+    : dayData?.totalQty ?? 0
+
   const topPeakHours = forecast?.peakHours.slice(0, 3) ?? []
   const topProducts = forecast?.topProducts.slice(0, 3) ?? []
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">Tomorrow&apos;s Demand</CardTitle>
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-base font-semibold">Tomorrow&apos;s Demand</CardTitle>
+          <Badge variant={source === "chronos" ? "default" : "outline"} className="text-[10px] px-1.5 py-0">
+            {source === "chronos" ? "Chronos-2" : "Statistical"}
+          </Badge>
+        </div>
         <Clock className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent className="flex-1">
@@ -64,6 +105,11 @@ export function TomorrowsDemand() {
               <div>
                 <p className="text-sm text-muted-foreground">{tomorrowName} prediction</p>
                 <p className="text-2xl font-bold tabular-nums">{predictedUnits} units</p>
+                {aiPrediction && (
+                  <p className="text-xs text-muted-foreground">
+                    Range: {Math.round(aiPrediction.lower_bound)}–{Math.round(aiPrediction.upper_bound)} units
+                  </p>
+                )}
               </div>
               <div className="flex items-center gap-1">
                 {forecast.trend.direction === "up" ? (

@@ -5,6 +5,7 @@ import salesRouter from "./sales.js";
 import analyticsRouter from "./analytics.js";
 import aiRouter from "./ai.js";
 import demandRouter from "./demand.js";
+import aiforecastRouter from "./aiforecast.js";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use(salesRouter);
 router.use(analyticsRouter);
 router.use(aiRouter);
 router.use(demandRouter);
+router.use(aiforecastRouter);
 
 export default router;

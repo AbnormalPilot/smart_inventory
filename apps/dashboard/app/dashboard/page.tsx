@@ -1,5 +1,9 @@
 "use client"
 
+import { TomorrowPredictionBanner } from "@/components/dashboard/tomorrow-prediction-banner"
+import { ForecastSummaryCards } from "@/components/dashboard/forecast-summary-cards"
+import { AiForecastChart } from "@/components/dashboard/ai-forecast-chart"
+import { MiniDemandMap } from "@/components/dashboard/mini-demand-map"
 import { TomorrowsDemand } from "@/components/dashboard/tomorrows-demand"
 import { StockShortageRisk } from "@/components/dashboard/stock-shortage-risk"
 import { SeasonalDemand } from "@/components/dashboard/seasonal-demand"
@@ -16,11 +20,29 @@ export default function DashboardPage() {
         </p>
       </div>
 
+      {/* One-liner tomorrow prediction */}
+      <TomorrowPredictionBanner />
+
+      {/* AI Forecast KPI Cards */}
+      <ForecastSummaryCards />
+
+      {/* AI Forecast Chart + Mini Demand Heatmap */}
+      <div className="grid gap-4 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <AiForecastChart />
+        </div>
+        <div className="lg:col-span-2">
+          <MiniDemandMap />
+        </div>
+      </div>
+
+      {/* Tomorrow's Demand + Stock Shortage */}
       <div className="grid gap-4 lg:grid-cols-2">
         <TomorrowsDemand />
         <StockShortageRisk />
       </div>
 
+      {/* Seasonal + High Probability Stock */}
       <div className="grid gap-4 lg:grid-cols-7">
         <div className="lg:col-span-4">
           <SeasonalDemand />
@@ -30,6 +52,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Live Trending */}
       <LiveTrendingProduct />
     </div>
   )
