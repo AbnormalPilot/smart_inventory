@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BarChart3, Package, Calendar, Database } from "lucide-react"
@@ -23,7 +23,16 @@ export function DemandStats({ refreshKey }: DemandStatsProps) {
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Throttle re-fetches to at most once every 10 seconds
+  const lastFetchRef = useRef(0)
+
   useEffect(() => {
+    const now = Date.now()
+    const elapsed = now - lastFetchRef.current
+
+    if (lastFetchRef.current !== 0 && elapsed < 10_000) return
+
+    lastFetchRef.current = now
     setLoading(true)
     fetch(`${API_BASE}/api/demand/stats`)
       .then((r) => r.json())

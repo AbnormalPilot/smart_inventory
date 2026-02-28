@@ -101,6 +101,9 @@ export default function MapsPage() {
 
       // Update live feed (keep last 5)
       setLiveEvents((prev) => [...tagged, ...prev].slice(0, 5))
+
+      // Bump refreshKey so DemandStats re-fetches
+      setRefreshKey((k) => k + 1)
     })
 
     return () => {
