@@ -11,6 +11,7 @@ import {
   Bot,
   User,
   Boxes,
+  FileSpreadsheet,
 } from "lucide-react"
 
 import {
@@ -47,6 +48,7 @@ const navGroups = [
     label: "Intelligence",
     items: [
       { title: "Analysis", href: "/analysis", icon: BarChart3 },
+      { title: "Analyse CSV", href: "/analyse-csv", icon: FileSpreadsheet },
       { title: "AI Assistant", href: "/ai-assistant", icon: Bot },
     ],
   },
@@ -67,7 +69,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/maps">
+              <Link href="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Boxes className="size-4" />
                 </div>

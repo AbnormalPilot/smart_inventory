@@ -1,43 +1,36 @@
 "use client"
 
-import { KpiCards } from "@/components/dashboard/kpi-cards"
-import { SalesChart } from "@/components/dashboard/sales-chart"
-import { CategoryChart } from "@/components/dashboard/category-chart"
-import { TopProducts } from "@/components/dashboard/top-products"
-import { RecentSales } from "@/components/dashboard/recent-sales"
-import { AiRecommendations } from "@/components/dashboard/ai-recommendations"
+import { TomorrowsDemand } from "@/components/dashboard/tomorrows-demand"
+import { StockShortageRisk } from "@/components/dashboard/stock-shortage-risk"
+import { SeasonalDemand } from "@/components/dashboard/seasonal-demand"
+import { HighProbabilityStock } from "@/components/dashboard/high-probability-stock"
+import { LiveTrendingProduct } from "@/components/dashboard/live-trending-product"
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">AI Intelligence Center</h1>
         <p className="text-muted-foreground">
-          Your AI-powered inventory management overview.
+          Demand forecasting, risk analysis, and live trending insights.
         </p>
       </div>
 
-      <KpiCards />
-
-      <div className="grid gap-4 lg:grid-cols-7">
-        <div className="lg:col-span-4">
-          <SalesChart />
-        </div>
-        <div className="lg:col-span-3">
-          <CategoryChart />
-        </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <TomorrowsDemand />
+        <StockShortageRisk />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-7">
         <div className="lg:col-span-4">
-          <AiRecommendations />
+          <SeasonalDemand />
         </div>
         <div className="lg:col-span-3">
-          <TopProducts />
+          <HighProbabilityStock />
         </div>
       </div>
 
-      <RecentSales />
+      <LiveTrendingProduct />
     </div>
   )
 }
