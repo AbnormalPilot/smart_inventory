@@ -32,8 +32,8 @@ const navGroups = [
   {
     label: "Overview",
     items: [
-      { title: "Dashboard", href: "/", icon: LayoutDashboard },
       { title: "Maps", href: "/maps", icon: MapPin },
+      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     ],
   },
   {
@@ -67,7 +67,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
+              <Link href="/maps">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Boxes className="size-4" />
                 </div>
@@ -88,10 +88,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => {
-                  const isActive =
-                    item.href === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(item.href)
+                  const isActive = pathname.startsWith(item.href)
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton

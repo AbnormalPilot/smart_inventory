@@ -236,22 +236,68 @@ function parseCSVDirectly(
  *         in: query
  *         schema: { type: integer, default: 30 }
  *         description: Number of days to look back
+ *       - name: startHour
+ *         in: query
+ *         schema: { type: integer }
+ *         description: Filter events starting from this hour (0-23)
+ *       - name: endHour
+ *         in: query
+ *         schema: { type: integer }
+ *         description: Filter events up to this hour (0-23)
+ *       - name: start
+ *         in: query
+ *         schema: { type: string, format: date }
+ *         description: Custom start date (YYYY-MM-DD)
+ *       - name: end
+ *         in: query
+ *         schema: { type: string, format: date }
+ *         description: Custom end date (YYYY-MM-DD)
  *     responses:
  *       200:
  *         description: Array of [lat, lng, intensity] points
  */
 router.get("/demand/heatmap", async (req: Request, res: Response) => {
   try {
-    const days = parseInt(req.query.days as string) || 30;
-    const since = new Date();
-    since.setDate(since.getDate() - days);
+    let since: Date;
+    let until: Date | null = null;
 
-    const events = await DemandEvent.find(
-      { date: { $gte: since } },
-      { "location.coordinates": 1, quantity: 1, _id: 0 }
-    ).lean();
+    if (req.query.start && req.query.end) {
+      since = new Date(req.query.start as string);
+      until = new Date(req.query.end as string);
+      until.setHours(23, 59, 59, 999);
+    } else {
+      const days = parseInt(req.query.days as string) || 30;
+      since = new Date();
+      since.setDate(since.getDate() - days);
+    }
 
-    const points = events.map((e) => [
+    const startHour = req.query.startHour !== undefined ? parseInt(req.query.startHour as string) : null;
+    const endHour = req.query.endHour !== undefined ? parseInt(req.query.endHour as string) : null;
+
+    const dateFilter: Record<string, unknown> = { $gte: since };
+    if (until) dateFilter.$lte = until;
+    const matchStage: Record<string, unknown> = { date: dateFilter };
+
+    // Build pipeline for hour filtering via the time string field
+    const pipeline: Record<string, unknown>[] = [
+      { $match: matchStage },
+      { $addFields: { _hour: { $toInt: { $substr: ["$time", 0, 2] } } } },
+    ];
+
+    if (startHour !== null && endHour !== null && !isNaN(startHour) && !isNaN(endHour)) {
+      if (startHour <= endHour) {
+        pipeline.push({ $match: { _hour: { $gte: startHour, $lte: endHour } } });
+      } else {
+        // Wrap around midnight: e.g. 22:00 - 04:00
+        pipeline.push({ $match: { $or: [{ _hour: { $gte: startHour } }, { _hour: { $lte: endHour } }] } });
+      }
+    }
+
+    pipeline.push({ $project: { "location.coordinates": 1, quantity: 1, _id: 0 } });
+
+    const events = await DemandEvent.aggregate(pipeline);
+
+    const points = events.map((e: { location: { coordinates: number[] }; quantity: number }) => [
       e.location.coordinates[1], // lat
       e.location.coordinates[0], // lng
       Math.min(e.quantity / 10, 1), // normalized intensity 0-1

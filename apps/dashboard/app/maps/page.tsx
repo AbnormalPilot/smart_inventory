@@ -7,6 +7,7 @@ import { RadiusControl } from "@/components/maps/radius-control"
 import { DemandUpload } from "@/components/maps/demand-upload"
 import { DemandStats } from "@/components/maps/demand-stats"
 import { DemandForecast, ForecastToggle } from "@/components/maps/demand-forecast"
+import { TimeFilter } from "@/components/maps/time-filter"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -25,16 +26,32 @@ export default function MapsPage() {
   const [forecastOpen, setForecastOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
   const [demandPoints, setDemandPoints] = useState<Array<[number, number, number]>>([])
+  const [timeRange, setTimeRange] = useState<[number, number] | null>(null)
+  const [dateRange, setDateRange] = useState<{ days: number; start: string | null; end: string | null }>({
+    days: 30,
+    start: null,
+    end: null,
+  })
   const { latitude, longitude, error, loading } = useGeolocation()
 
   const fetchHeatmapData = useCallback(() => {
-    fetch(`${API_BASE}/api/demand/heatmap?days=30`)
+    const params = new URLSearchParams()
+    if (dateRange.start && dateRange.end) {
+      params.set("start", dateRange.start)
+      params.set("end", dateRange.end)
+    }
+    params.set("days", String(dateRange.days))
+    if (timeRange) {
+      params.set("startHour", String(timeRange[0]))
+      params.set("endHour", String(timeRange[1]))
+    }
+    fetch(`${API_BASE}/api/demand/heatmap?${params}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.points) setDemandPoints(data.points)
       })
       .catch(() => {})
-  }, [])
+  }, [timeRange, dateRange])
 
   useEffect(() => {
     fetchHeatmapData()
@@ -70,8 +87,8 @@ export default function MapsPage() {
           demandPoints={demandPoints}
         />
 
-        {/* View mode toggle — top center */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] flex gap-1 bg-background/80 backdrop-blur-md rounded-lg p-1 shadow-lg border">
+        {/* Top bar — view toggle + filters, all inline */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-1 bg-background/80 backdrop-blur-md rounded-lg p-1 shadow-lg border">
           <Button
             variant={viewMode === "radius" ? "default" : "ghost"}
             size="sm"
@@ -95,6 +112,17 @@ export default function MapsPage() {
               </Badge>
             )}
           </Button>
+
+          {/* Separator */}
+          <div className="w-px h-5 bg-border mx-0.5" />
+
+          {/* Time & Date filters */}
+          <TimeFilter
+            timeRange={timeRange}
+            onTimeChange={setTimeRange}
+            dateRange={dateRange}
+            onDateChange={setDateRange}
+          />
         </div>
 
         {/* Upload panel — top right */}
@@ -102,8 +130,8 @@ export default function MapsPage() {
           <DemandUpload onUploadComplete={handleUploadComplete} />
         </div>
 
-        {/* Stats overlay — top left (below error badge) */}
-        <div className="absolute top-12 left-3 z-[1000]">
+        {/* Stats overlay — bottom left */}
+        <div className="absolute bottom-4 left-3 z-[1000]">
           <DemandStats refreshKey={refreshKey} />
         </div>
 
