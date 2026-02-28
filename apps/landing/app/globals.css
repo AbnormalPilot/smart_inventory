@@ -3,53 +3,51 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Added smooth scroll behavior globally */
 html {
   scroll-behavior: smooth;
 }
 
 :root {
-  /* Converting to light mode theme */
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.1 0 0);
-  --card: oklch(0.99 0 0);
-  --card-foreground: oklch(0.1 0 0);
-  --popover: oklch(0.99 0 0);
-  --popover-foreground: oklch(0.1 0 0);
-  --primary: oklch(0.55 0.25 270); /* Vibrant Indigo */
+  --background: oklch(0.98 0.01 270);
+  --foreground: oklch(0.13 0.03 270);
+  --card: oklch(0.99 0.005 270);
+  --card-foreground: oklch(0.13 0.03 270);
+  --popover: oklch(0.99 0.005 270);
+  --popover-foreground: oklch(0.13 0.03 270);
+  --primary: oklch(0.55 0.25 270);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.94 0.05 270); /* Light Indigo */
-  --secondary-foreground: oklch(0.2 0.05 270);
-  --muted: oklch(0.96 0.02 270);
-  --muted-foreground: oklch(0.45 0.05 270);
-  --accent: oklch(0.65 0.25 330); /* Vibrant Fuchsia/Pink */
-  --accent-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.94 0.02 270);
+  --secondary-foreground: oklch(0.25 0.05 270);
+  --muted: oklch(0.93 0.01 270);
+  --muted-foreground: oklch(0.45 0.03 270);
+  --accent: oklch(0.65 0.2 160);
+  --accent-foreground: oklch(0.15 0.05 160);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.90 0.02 270);
-  --input: oklch(0.90 0.02 270);
+  --border: oklch(0.9 0.02 270);
+  --input: oklch(0.94 0.01 270);
   --ring: oklch(0.55 0.25 270);
-  --chart-1: oklch(0.1 0 0);
-  --chart-2: oklch(0.4 0 0);
-  --chart-3: oklch(0.6 0 0);
-  --chart-4: oklch(0.3 0 0);
-  --chart-5: oklch(0.5 0 0);
+  --chart-1: oklch(0.55 0.25 270);
+  --chart-2: oklch(0.65 0.2 160);
+  --chart-3: oklch(0.6 0.15 300);
+  --chart-4: oklch(0.7 0.15 80);
+  --chart-5: oklch(0.55 0.2 200);
   --radius: 0.75rem;
   --sidebar: oklch(0.99 0 0);
   --sidebar-foreground: oklch(0.1 0 0);
-  --sidebar-primary: oklch(0.1 0 0);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.94 0 0);
-  --sidebar-accent-foreground: oklch(0.1 0 0);
-  --sidebar-border: oklch(0.88 0 0);
-  --sidebar-ring: oklch(0.1 0 0);
+  --sidebar-primary: oklch(0.55 0.25 270);
+  --sidebar-primary-foreground: oklch(
+    0.98 0 0);
+  --sidebar-accent: oklch(0.94 0.02 270);
+  --sidebar-accent-foreground: oklch(0.25 0.05 270);
+  --sidebar-border: oklch(0.9 0.02 270);
+  --sidebar-ring: oklch(0.55 0.25 270);
 }
 
 @theme inline {
-  /* Premium modern fonts for sans and headers */
-  --font-sans: var(--font-outfit), "Outfit", "Inter", system-ui, sans-serif;
-  --font-serif: var(--font-space), "Space Grotesk", "Inter", sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: var(--font-sans, "Inter", system-ui, sans-serif);
+  --font-display: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
