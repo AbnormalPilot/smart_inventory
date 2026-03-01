@@ -1,0 +1,55 @@
+services:
+  # ── Backend API + WebSocket ──────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - "7020:7020"
+    environment:
+      - PORT=7020
+      - MONGODB_URI=${MONGODB_URI}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - AI_ENGINE_URL=http://ai-engine:8000
+    depends_on:
+      ai-engine:
+        condition: service_started
+    restart: unless-stopped
+
+  # ── AI Forecast Engine (Chronos-2) ───────────────
+  ai-engine:
+    build:
+      context: apps/ai-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - MODEL_NAME=autogluon/chronos-t5-small
+      - PORT=8000
+    restart: unless-stopped
+
+  # ── Dashboard (Next.js 15) ──────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - BACKEND_URL=http://backend:7020
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ── Landing Page (Next.js 16) ───────────────────
+  landing:
+    build:
+      context: .
+      dockerfile: apps/landing/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped
