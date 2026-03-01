@@ -1,0 +1,22 @@
+{
+  "name": "@smart-inventory/mcp-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP server for Smart Inventory — provides tools for AI-powered inventory management",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "mongoose": "^9.2.3",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
