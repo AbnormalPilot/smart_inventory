@@ -1,5 +1,7 @@
 import { Server } from "socket.io";
 import { DemandEvent } from "../models/DemandEvent.js";
+import { gatherContext } from "./aiContext.js";
+import { completeChat } from "./openrouter.js";
 
 const PRODUCTS: { name: string; category: string }[] = [
   { name: "Toned Milk 500ml", category: "Dairy" },
@@ -127,4 +129,35 @@ export function startLiveSimulator(io: Server): void {
 
     io.emit("demand:new-events", events);
   }, 3000);
+
+  // AI forecast insight every 30 seconds
+  if (process.env.OPENROUTER_API_KEY) {
+    setInterval(async () => {
+      try {
+        const context = await gatherContext();
+        const insight = await completeChat([
+          {
+            role: "system",
+            content:
+              "You are a concise inventory analyst. Given the data below, produce a single 1-2 sentence actionable insight or forecast about inventory trends, demand patterns, or restocking needs. Use ₹ for currency. Be specific with product names and numbers.",
+          },
+          {
+            role: "user",
+            content: context,
+          },
+        ]);
+        io.emit("ai:forecast-insight", {
+          text: insight.trim(),
+          timestamp: new Date().toISOString(),
+        });
+      } catch {
+        // skip forecast on error
+      }
+    }, 30_000);
+    console.log("  AI forecast insights enabled (every 30s)");
+  } else {
+    console.log(
+      "  AI forecast insights disabled (set OPENROUTER_API_KEY in .env)"
+    );
+  }
 }
