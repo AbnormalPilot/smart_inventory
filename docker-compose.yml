@@ -21,7 +21,8 @@ services:
     build:
       context: apps/ai-engine
       dockerfile: Dockerfile
-    # No ports exposed — only backend talks to it internally
+    expose:
+      - "8000"
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - MODEL_NAME=autogluon/chronos-t5-small
@@ -35,6 +36,7 @@ services:
       dockerfile: apps/dashboard/Dockerfile
       args:
         - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:7020}
+        - BACKEND_URL=http://backend:7020
     expose:
       - "3001"
     environment:

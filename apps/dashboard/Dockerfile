@@ -23,6 +23,10 @@ COPY apps/dashboard/ apps/dashboard/
 ARG NEXT_PUBLIC_BACKEND_URL=http://localhost:7020
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 
+# BACKEND_URL is used by Next.js rewrites (baked at build time)
+ARG BACKEND_URL=http://backend:7020
+ENV BACKEND_URL=$BACKEND_URL
+
 # Build Next.js (standalone output)
 RUN npm run build --workspace=apps/dashboard
 
