@@ -2,6 +2,7 @@
 
 import { ChatInterface } from "@/components/ai/chat-interface"
 import { CsvUpload } from "@/components/ai/csv-upload"
+import { ForecastInsightBanner } from "@/components/ai/forecast-insight-banner"
 
 export default function AIAssistantPage() {
   return (
@@ -13,8 +14,10 @@ export default function AIAssistantPage() {
         </p>
       </div>
 
+      <ForecastInsightBanner />
+
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-h-[500px]">
           <ChatInterface />
         </div>
         <div>
