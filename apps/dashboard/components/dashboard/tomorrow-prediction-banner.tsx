@@ -70,6 +70,8 @@ export function TomorrowPredictionBanner() {
 
   if (units === null) return null
 
+  const fmt = (n: number) => Math.round(n).toLocaleString("en-IN")
+
   return (
     <div className="relative overflow-hidden rounded-lg border bg-gradient-to-r from-primary/5 via-primary/3 to-transparent px-4 py-3">
       <div className="flex items-center gap-3 flex-wrap">
@@ -86,11 +88,11 @@ export function TomorrowPredictionBanner() {
 
         <div className="flex items-center gap-4 flex-wrap text-sm">
           <span className="flex items-center gap-1.5">
-            <span className="font-bold text-base tabular-nums">{units}</span>
+            <span className="font-bold text-base tabular-nums">{fmt(units)}</span>
             <span className="text-muted-foreground">units predicted</span>
             {range && (
               <span className="text-xs text-muted-foreground">
-                ({range.low}–{range.high})
+                ({fmt(range.low)}–{fmt(range.high)})
               </span>
             )}
           </span>

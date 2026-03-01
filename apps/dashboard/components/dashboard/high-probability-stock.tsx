@@ -55,7 +55,7 @@ export function HighProbabilityStock() {
                     <Badge variant="secondary" className="text-xs">
                       {product.category}
                     </Badge>
-                    <span className="text-sm font-semibold tabular-nums">{product.totalQty}</span>
+                    <span className="text-sm font-semibold tabular-nums">{product.totalQty.toLocaleString("en-IN")}</span>
                   </div>
                 </div>
                 <Progress value={(product.totalQty / maxQty) * 100} className="h-2" />

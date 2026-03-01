@@ -239,8 +239,8 @@ export function AiForecastChart() {
             </ChartContainer>
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
-                Total: <span className="font-medium text-foreground">{forecast.total_predicted} units</span>
-                {" "}| Avg: <span className="font-medium text-foreground">{forecast.avg_daily}/day</span>
+                Total: <span className="font-medium text-foreground">{Math.round(forecast.total_predicted).toLocaleString("en-IN")} units</span>
+                {" "}| Avg: <span className="font-medium text-foreground">{Math.round(forecast.avg_daily).toLocaleString("en-IN")}/day</span>
               </span>
               <span>{forecast.confidence_level} confidence</span>
             </div>

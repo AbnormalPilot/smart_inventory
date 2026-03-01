@@ -44,9 +44,9 @@ export function LiveTrendingProduct() {
           <span className="text-sm font-medium truncate">{topProduct.product}</span>
         </div>
         <div className="flex items-center gap-4 ml-auto text-xs text-muted-foreground shrink-0">
-          <span><span className="font-semibold text-foreground tabular-nums">{topProduct.totalQty}</span> units sold</span>
-          <span><span className="font-semibold text-foreground tabular-nums">{stats.totalQuantity}</span> net qty</span>
-          <span><span className="font-semibold text-foreground tabular-nums">{stats.totalEvents}</span> events</span>
+          <span><span className="font-semibold text-foreground tabular-nums">{topProduct.totalQty.toLocaleString("en-IN")}</span> units sold</span>
+          <span><span className="font-semibold text-foreground tabular-nums">{stats.totalQuantity.toLocaleString("en-IN")}</span> net qty</span>
+          <span><span className="font-semibold text-foreground tabular-nums">{stats.totalEvents.toLocaleString("en-IN")}</span> events</span>
         </div>
       </CardContent>
     </Card>

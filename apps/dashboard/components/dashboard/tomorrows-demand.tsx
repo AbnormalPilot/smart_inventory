@@ -104,10 +104,10 @@ export function TomorrowsDemand() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">{tomorrowName} prediction</p>
-                <p className="text-2xl font-bold tabular-nums">{predictedUnits} units</p>
+                <p className="text-2xl font-bold tabular-nums">{predictedUnits.toLocaleString("en-IN")} units</p>
                 {aiPrediction && (
                   <p className="text-xs text-muted-foreground">
-                    Range: {Math.round(aiPrediction.lower_bound)}–{Math.round(aiPrediction.upper_bound)} units
+                    Range: {Math.round(aiPrediction.lower_bound).toLocaleString("en-IN")}–{Math.round(aiPrediction.upper_bound).toLocaleString("en-IN")} units
                   </p>
                 )}
               </div>
@@ -133,7 +133,7 @@ export function TomorrowsDemand() {
                 {topProducts.map((p, i) => (
                   <div key={i} className="flex items-center justify-between text-sm">
                     <span className="truncate mr-2">{p.product}</span>
-                    <span className="text-muted-foreground tabular-nums shrink-0">{p.totalQty} units</span>
+                    <span className="text-muted-foreground tabular-nums shrink-0">{p.totalQty.toLocaleString("en-IN")} units</span>
                   </div>
                 ))}
               </div>

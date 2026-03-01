@@ -84,6 +84,11 @@ export function ForecastSummaryCards() {
     return null
   }
 
+  const fmt = (n: number | undefined) => {
+    if (n == null) return "—"
+    return Math.round(n).toLocaleString("en-IN")
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {/* Predicted 7-Day Demand */}
@@ -95,7 +100,7 @@ export function ForecastSummaryCards() {
                 Predicted Next 7D Demand
               </p>
               <p className="text-2xl font-bold tabular-nums">
-                {overall?.total_predicted ?? "—"}{" "}
+                {fmt(overall?.total_predicted)}{" "}
                 <span className="text-sm font-normal text-muted-foreground">
                   units
                 </span>
@@ -124,7 +129,7 @@ export function ForecastSummaryCards() {
               </p>
               <p className="text-xs text-muted-foreground">
                 {topProduct
-                  ? `${topProduct.total_qty} units over ${topProduct.data_days} days`
+                  ? `${fmt(topProduct.total_qty)} units over ${topProduct.data_days} days`
                   : "No data"}
               </p>
             </div>
@@ -150,7 +155,7 @@ export function ForecastSummaryCards() {
                   }`}
                 />
                 <p className="text-2xl font-bold tabular-nums">
-                  {overall?.avg_daily ?? "—"}
+                  {fmt(overall?.avg_daily)}
                 </p>
                 <span className="text-sm font-normal text-muted-foreground">
                   avg/day
