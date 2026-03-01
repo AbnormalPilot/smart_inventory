@@ -9,10 +9,14 @@ import { StockShortageRisk } from "@/components/dashboard/stock-shortage-risk"
 import { SeasonalDemand } from "@/components/dashboard/seasonal-demand"
 import { HighProbabilityStock } from "@/components/dashboard/high-probability-stock"
 import { LiveTrendingProduct } from "@/components/dashboard/live-trending-product"
+import { AiHeadlines } from "@/components/dashboard/ai-headlines"
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
+      {/* AI-generated rotating headlines */}
+      <AiHeadlines />
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight">AI Intelligence Center</h1>
         <p className="text-muted-foreground">

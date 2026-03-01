@@ -155,6 +155,55 @@ export function startLiveSimulator(io: Server): void {
       }
     }, 30_000);
     console.log("  AI forecast insights enabled (every 30s)");
+
+    // AI headlines — rotating smart insights every 20 seconds
+    const headlineTypes = ["insight", "alert", "trend", "tip"] as const;
+    const headlinePrompts: Record<string, string> = {
+      insight:
+        "Give a single short headline (under 15 words) with a key business insight from this inventory data. Include a specific number or product name. No quotes.",
+      alert:
+        "Give a single short headline (under 15 words) about the most urgent stock alert or risk from this data. Include the product name. No quotes.",
+      trend:
+        "Give a single short headline (under 15 words) about a demand trend you see in this data. Mention direction (rising/falling) and a product or category. No quotes.",
+      tip:
+        "Give a single short headline (under 15 words) with a smart restocking or pricing tip based on this data. Be specific. No quotes.",
+    };
+    let headlineIdx = 0;
+
+    const emitHeadline = async () => {
+      try {
+        const context = await gatherContext();
+        const type = headlineTypes[headlineIdx % headlineTypes.length];
+        headlineIdx++;
+        const text = await completeChat([
+          {
+            role: "system",
+            content:
+              "You are a smart inventory headline writer for a dashboard ticker. Respond with ONLY the headline text, nothing else. Keep it punchy and data-driven.",
+          },
+          {
+            role: "user",
+            content: `${headlinePrompts[type]}\n\nInventory data:\n${context}`,
+          },
+        ]);
+        const cleaned = text.trim().replace(/^["']|["']$/g, "");
+        if (cleaned && cleaned.length > 5) {
+          io.emit("ai:headline", {
+            id: `hl-${Date.now()}`,
+            text: cleaned,
+            type,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      } catch {
+        // skip on error
+      }
+    };
+
+    // Emit first headline quickly, then every 20s
+    setTimeout(emitHeadline, 5000);
+    setInterval(emitHeadline, 20_000);
+    console.log("  AI headlines enabled (every 20s)");
   } else {
     console.log(
       "  AI forecast insights disabled (set OPENROUTER_API_KEY in .env)"
