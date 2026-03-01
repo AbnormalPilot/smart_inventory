@@ -21,8 +21,7 @@ services:
     build:
       context: apps/ai-engine
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    # No ports exposed — only backend talks to it internally
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - MODEL_NAME=autogluon/chronos-t5-small
