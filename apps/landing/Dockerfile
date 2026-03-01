@@ -2,6 +2,9 @@ FROM node:22-alpine AS base
 
 WORKDIR /app
 
+# Remove yarn to prevent Next.js SWC lockfile patching from using it
+RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg
+
 # Install deps
 COPY package.json package-lock.json turbo.json ./
 COPY apps/landing/package.json apps/landing/
@@ -21,7 +24,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=base /app/apps/landing/.next/standalone ./
 COPY --from=base /app/apps/landing/.next/static ./apps/landing/.next/static
-COPY --from=base /app/apps/landing/public ./apps/landing/public 2>/dev/null || true
+COPY --from=base /app/apps/landing/public ./apps/landing/public
 
 EXPOSE 3000
 
