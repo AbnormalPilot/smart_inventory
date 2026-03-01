@@ -25,13 +25,11 @@ router.get("/ai/recommendations", async (_req: Request, res: Response) => {
     }> = [];
 
     // Low stock recommendations
-    const lowStockProducts = await Product.find({
-      isActive: true,
-      $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-    })
-      .sort({ quantity: 1 })
-      .limit(5)
-      .lean();
+    const lowStockProducts = await Product.aggregate([
+      { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+      { $sort: { quantity: 1 } },
+      { $limit: 5 },
+    ]);
 
     for (const p of lowStockProducts) {
       recommendations.push({
@@ -148,18 +146,19 @@ router.post("/ai/chat", async (req: Request, res: Response) => {
 
     if (lowerMsg.includes("stock") || lowerMsg.includes("inventory")) {
       const totalProducts = await Product.countDocuments({ isActive: true });
-      const lowStock = await Product.countDocuments({
-        isActive: true,
-        $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-      });
+      const lowStockResult = await Product.aggregate([
+        { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+        { $count: "n" },
+      ]);
+      const lowStock = lowStockResult[0]?.n ?? 0;
       const outOfStock = await Product.countDocuments({ isActive: true, quantity: 0 });
 
       response = `📦 **Inventory Summary**\n\n- Total products: **${totalProducts}**\n- Low stock items: **${lowStock}**\n- Out of stock: **${outOfStock}**\n\n`;
       if (lowStock > 0) {
-        const items = await Product.find({
-          isActive: true,
-          $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-        }).limit(5).lean();
+        const items = await Product.aggregate([
+          { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+          { $limit: 5 },
+        ]);
         response += "**Low stock items:**\n";
         for (const item of items) {
           response += `- ${item.name}: ${item.quantity} ${item.unit} left\n`;
@@ -188,10 +187,11 @@ router.post("/ai/chat", async (req: Request, res: Response) => {
       response = `💰 **Sales Summary**\n\n**Today:**\n- Revenue: ₹${today.total.toFixed(2)}\n- Orders: ${today.count}\n\n**This Month:**\n- Revenue: ₹${month.total.toFixed(2)}\n- Orders: ${month.count}\n- Avg order: ₹${month.count > 0 ? (month.total / month.count).toFixed(2) : "0.00"}`;
       suggestions.push("Show inventory status", "Show top products", "What should I restock?");
     } else if (lowerMsg.includes("recommend") || lowerMsg.includes("restock") || lowerMsg.includes("suggest")) {
-      const lowStock = await Product.find({
-        isActive: true,
-        $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-      }).sort({ quantity: 1 }).limit(5).lean();
+      const lowStock = await Product.aggregate([
+        { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+        { $sort: { quantity: 1 } },
+        { $limit: 5 },
+      ]);
 
       if (lowStock.length === 0) {
         response = "✅ All products are well-stocked! No immediate restocking needed.";

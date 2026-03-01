@@ -69,13 +69,11 @@ export const demandTools = {
       "Get all products that are at or below their low stock threshold. These products need restocking.",
     inputSchema: z.object({}),
     handler: async () => {
-      const products = await Product.find({
-        isActive: true,
-        $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-      })
-        .select("name sku category quantity unit lowStockThreshold price")
-        .sort({ quantity: 1 })
-        .lean();
+      const products = await Product.aggregate([
+        { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+        { $project: { name: 1, sku: 1, category: 1, quantity: 1, unit: 1, lowStockThreshold: 1, price: 1 } },
+        { $sort: { quantity: 1 } },
+      ]);
 
       return {
         content: [

@@ -48,8 +48,37 @@ router.get("/products", async (req: Request, res: Response) => {
     if (category) {
       filter.category = category;
     }
+
     if (lowStock) {
-      filter.$expr = { $lte: ["$quantity", "$lowStockThreshold"] };
+      // Use aggregate to avoid Mongoose $expr cast bug
+      const matchStage: Record<string, unknown> = {
+        ...filter,
+        $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
+      };
+      const [productsResult, countResult] = await Promise.all([
+        Product.aggregate([
+          { $match: matchStage },
+          { $sort: { updatedAt: -1 } },
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+        ]),
+        Product.aggregate([
+          { $match: matchStage },
+          { $count: "n" },
+        ]),
+      ]);
+      const products = productsResult;
+      const total = countResult[0]?.n ?? 0;
+
+      return res.json({
+        products,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
     }
 
     const [products, total] = await Promise.all([
@@ -106,12 +135,10 @@ router.get("/products/categories", async (_req: Request, res: Response) => {
  */
 router.get("/products/low-stock", async (_req: Request, res: Response) => {
   try {
-    const products = await Product.find({
-      isActive: true,
-      $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-    })
-      .sort({ quantity: 1 })
-      .lean();
+    const products = await Product.aggregate([
+      { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+      { $sort: { quantity: 1 } },
+    ]);
     res.json({ products, count: products.length });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch low stock products", error: String(err) });

@@ -38,10 +38,10 @@ router.get("/analytics/overview", async (_req: Request, res: Response) => {
           { $group: { _id: null, total: { $sum: "$grandTotal" }, count: { $sum: 1 } } },
         ]),
         Product.countDocuments({ isActive: true }),
-        Product.countDocuments({
-          isActive: true,
-          $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-        }),
+        Product.aggregate([
+          { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+          { $count: "n" },
+        ]).then((r) => r[0]?.n ?? 0),
         Product.aggregate([
           { $match: { isActive: true } },
           { $group: { _id: null, value: { $sum: { $multiply: ["$costPrice", "$quantity"] } } } },

@@ -19,10 +19,10 @@ export const inventoryTools = {
             },
           },
         ]),
-        Product.countDocuments({
-          isActive: true,
-          $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-        }),
+        Product.aggregate([
+          { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+          { $count: "n" },
+        ]).then((r) => r[0]?.n ?? 0),
         Product.countDocuments({ isActive: true }),
       ]);
 

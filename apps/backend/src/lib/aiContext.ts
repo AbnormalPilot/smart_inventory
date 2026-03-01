@@ -14,13 +14,11 @@ export async function gatherContext(): Promise<string> {
     totalProducts,
   ] = await Promise.all([
     // Top 10 low-stock products (quantity <= lowStockThreshold)
-    Product.find({
-      isActive: true,
-      $expr: { $lte: ["$quantity", "$lowStockThreshold"] },
-    })
-      .sort({ quantity: 1 })
-      .limit(10)
-      .lean(),
+    Product.aggregate([
+      { $match: { isActive: true, $expr: { $lte: ["$quantity", "$lowStockThreshold"] } } },
+      { $sort: { quantity: 1 } },
+      { $limit: 10 },
+    ]),
 
     // Top 5 best-selling products (last 30 days)
     Sale.aggregate([
