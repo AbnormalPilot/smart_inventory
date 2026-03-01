@@ -21,7 +21,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=base /app/apps/landing/.next/standalone ./
 COPY --from=base /app/apps/landing/.next/static ./apps/landing/.next/static
-COPY --from=base /app/apps/landing/public ./apps/landing/public
+COPY --from=base /app/apps/landing/public ./apps/landing/public 2>/dev/null || true
 
 EXPOSE 3000
 

@@ -21,7 +21,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=base /app/apps/dashboard/.next/standalone ./
 COPY --from=base /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
-COPY --from=base /app/apps/dashboard/public ./apps/dashboard/public
+COPY --from=base /app/apps/dashboard/public ./apps/dashboard/public 2>/dev/null || true
 
 EXPOSE 3001
 

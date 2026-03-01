@@ -17,7 +17,6 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/apps/backend/node_modules ./apps/backend/node_modules
 COPY --from=base /app/apps/backend/dist ./apps/backend/dist
 COPY --from=base /app/apps/backend/package.json ./apps/backend/
 
