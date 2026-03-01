@@ -295,7 +295,7 @@ router.get("/demand/heatmap", async (req: Request, res: Response) => {
 
     pipeline.push({ $project: { "location.coordinates": 1, quantity: 1, _id: 0 } });
 
-    const events = await DemandEvent.aggregate(pipeline);
+    const events = await DemandEvent.aggregate(pipeline as any[]);
 
     const points = events.map((e: { location: { coordinates: number[] }; quantity: number }) => [
       e.location.coordinates[1], // lat
