@@ -1,5 +1,5 @@
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "meta-llama/llama-4-maverick:free";
+const MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
