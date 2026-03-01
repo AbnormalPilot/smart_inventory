@@ -10,7 +10,7 @@ import { gatherContext } from "./lib/aiContext.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 7020;
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
