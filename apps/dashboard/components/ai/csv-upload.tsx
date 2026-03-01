@@ -44,7 +44,7 @@ export function CsvUpload() {
 
       setProgress(60)
 
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7020/api"
+      const apiBase = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:7020") + "/api"
       const res = await fetch(`${apiBase}/ai/analyze-csv`, {
         method: "POST",
         body: formData,

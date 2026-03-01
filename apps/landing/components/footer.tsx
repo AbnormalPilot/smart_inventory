@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { Twitter, Linkedin, Instagram, Facebook, Package } from "lucide-react"
 
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3001"
+
 const footerLinks = {
   product: [
     { label: "Dashboard", href: "#features" },
@@ -24,7 +26,7 @@ const footerLinks = {
     { label: "Help Center", href: "#" },
     { label: "Contact", href: "#" },
     { label: "FAQ", href: "#faq" },
-    { label: "Dashboard", href: "http://localhost:3001" },
+    { label: "Dashboard", href: DASHBOARD_URL },
   ],
 }
 

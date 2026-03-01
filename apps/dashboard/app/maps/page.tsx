@@ -75,7 +75,7 @@ export default function MapsPage() {
 
   // Socket.IO connection
   useEffect(() => {
-    const socket: Socket = io("http://localhost:7020")
+    const socket: Socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:7020")
 
     socket.on("connect", () => setConnected(true))
     socket.on("disconnect", () => setConnected(false))

@@ -41,7 +41,7 @@ export function AiHeadlines() {
   const [connected, setConnected] = useState(false)
 
   useEffect(() => {
-    const socket = io("http://localhost:7020")
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:7020")
 
     socket.on("connect", () => setConnected(true))
     socket.on("disconnect", () => setConnected(false))

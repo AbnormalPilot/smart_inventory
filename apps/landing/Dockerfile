@@ -4,10 +4,12 @@ WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Remove yarn so Next.js SWC lockfile patcher doesn't try to use it.
-# (It runs `yarn config get registry` which fails because corepack
-#  misreads packageManager:"npm@11.7.0" as a yarn version string.)
-RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg
+# Remove yarn AND corepack so Next.js SWC lockfile patcher can't use them.
+# Corepack (bundled in Node 22) provides yarn even after removing the binary.
+# Next.js runs `yarn config get registry` which fails because corepack
+# misreads packageManager:"npm@11.7.0" as a yarn version string.
+RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack && \
+    rm -rf /usr/local/lib/node_modules/corepack
 
 # Install deps
 COPY package.json package-lock.json turbo.json ./
@@ -16,6 +18,10 @@ RUN npm install --workspace=apps/landing
 
 # Copy source
 COPY apps/landing/ apps/landing/
+
+# NEXT_PUBLIC_* vars are inlined at build time by Next.js
+ARG NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3001
+ENV NEXT_PUBLIC_DASHBOARD_URL=$NEXT_PUBLIC_DASHBOARD_URL
 
 # Build Next.js (standalone output)
 RUN npm run build --workspace=apps/landing

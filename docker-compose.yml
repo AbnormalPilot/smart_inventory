@@ -33,6 +33,8 @@ services:
     build:
       context: .
       dockerfile: apps/dashboard/Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:7020}
     expose:
       - "3001"
     environment:
@@ -47,6 +49,8 @@ services:
     build:
       context: .
       dockerfile: apps/landing/Dockerfile
+      args:
+        - NEXT_PUBLIC_DASHBOARD_URL=${NEXT_PUBLIC_DASHBOARD_URL:-http://localhost:3001}
     expose:
       - "3000"
     environment:

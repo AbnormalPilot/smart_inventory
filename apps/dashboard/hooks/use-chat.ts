@@ -28,7 +28,7 @@ export function useChat() {
   const streamingTextRef = useRef("")
 
   useEffect(() => {
-    const socket = io("http://localhost:7020")
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:7020")
     socketRef.current = socket
 
     socket.on("connect", () => setConnected(true))

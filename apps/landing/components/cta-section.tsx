@@ -1,6 +1,8 @@
 import { ArrowUpRight, ArrowRight } from "lucide-react"
 import { AnimatedRevenueChart } from "./animated-revenue-chart"
 
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3001"
+
 export function CTASection() {
   return (
     <section 
@@ -26,7 +28,7 @@ export function CTASection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="http://localhost:3001" className="relative flex items-center justify-center gap-0 bg-white text-black rounded-full pl-6 pr-1.5 py-1.5 transition-all duration-300 group overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
+            <a href={DASHBOARD_URL} className="relative flex items-center justify-center gap-0 bg-white text-black rounded-full pl-6 pr-1.5 py-1.5 transition-all duration-300 group overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
               <span className="text-sm font-medium pr-4">Try Dashboard</span>
               <span className="w-10 h-10 bg-zinc-100 rounded-full flex items-center justify-center">
                 <ArrowUpRight className="w-4 h-4 text-black" />

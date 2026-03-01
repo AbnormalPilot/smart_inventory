@@ -14,7 +14,7 @@ export function ForecastInsightBanner() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const socket = io("http://localhost:7020")
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:7020")
 
     socket.on("ai:forecast-insight", (data: ForecastInsight) => {
       setInsight(data)

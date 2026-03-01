@@ -4,6 +4,8 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Menu, X, ArrowUpRight, ArrowRight, Package } from "lucide-react"
 
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3001"
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -90,7 +92,7 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-1">
             <a
-              href="http://localhost:3001"
+              href={DASHBOARD_URL}
               className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 transition-all duration-300 group overflow-hidden ${
                 isScrolled ? "border-zinc-300" : "border-border"
               }`}
@@ -161,7 +163,7 @@ export function Header() {
             ))}
             <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-zinc-200">
               <a
-                href="http://localhost:3001"
+                href={DASHBOARD_URL}
                 className="relative flex items-center gap-0 border border-zinc-300 rounded-full pl-5 pr-1 py-1 w-fit transition-all duration-300 group overflow-hidden"
               >
                 <span className="absolute inset-0 rounded-full scale-x-0 origin-right group-hover:scale-x-100 transition-transform duration-300 bg-black" />
