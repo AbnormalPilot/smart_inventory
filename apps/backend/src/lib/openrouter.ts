@@ -1,14 +1,34 @@
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+
+/** Primary model for streaming chat */
+const PRIMARY_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+
+/** Pool of free models — used in parallel for headlines / batch work */
+export const MODEL_POOL = [
+  "nvidia/nemotron-3-nano-30b-a3b:free",
+  "stepfun/step-3.5-flash:free",
+  "arcee-ai/trinity-large-preview:free",
+  "arcee-ai/trinity-mini:free",
+] as const;
+
+export type ModelId = (typeof MODEL_POOL)[number];
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
 }
 
+function headers(apiKey: string) {
+  return {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+    "HTTP-Referer": "http://localhost:3001",
+    "X-Title": "Smart Inventory AI",
+  };
+}
+
 /**
- * Stream a chat completion from OpenRouter.
- * Calls `onToken` for each text chunk and `onDone` with the full assembled text.
+ * Stream a chat completion from OpenRouter (uses primary model).
  */
 export async function streamChat(
   messages: ChatMessage[],
@@ -25,14 +45,9 @@ export async function streamChat(
 
   const res = await fetch(OPENROUTER_URL, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "http://localhost:3001",
-      "X-Title": "Smart Inventory AI",
-    },
+    headers: headers(apiKey),
     body: JSON.stringify({
-      model: MODEL,
+      model: PRIMARY_MODEL,
       messages,
       stream: true,
       max_tokens: 1024,
@@ -83,27 +98,20 @@ export async function streamChat(
 }
 
 /**
- * Non-streaming single completion (used for forecast insights).
+ * Non-streaming completion with a specific model.
  */
-export async function completeChat(
-  messages: ChatMessage[]
+export async function completeChatWithModel(
+  model: string,
+  messages: ChatMessage[],
+  maxTokens = 200
 ): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return "OPENROUTER_API_KEY not set.";
 
   const res = await fetch(OPENROUTER_URL, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "http://localhost:3001",
-      "X-Title": "Smart Inventory AI",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages,
-      max_tokens: 200,
-    }),
+    headers: headers(apiKey),
+    body: JSON.stringify({ model, messages, max_tokens: maxTokens }),
   });
 
   if (!res.ok) {
@@ -114,4 +122,32 @@ export async function completeChat(
     choices?: Array<{ message?: { content?: string } }>;
   };
   return data.choices?.[0]?.message?.content ?? "No response from AI.";
+}
+
+/**
+ * Non-streaming completion using primary model (backward compat).
+ */
+export async function completeChat(
+  messages: ChatMessage[]
+): Promise<string> {
+  return completeChatWithModel(PRIMARY_MODEL, messages);
+}
+
+/**
+ * Fire multiple completions in parallel across different models.
+ * Returns results in same order as the tasks array.
+ * Each failed call returns null instead of throwing.
+ */
+export async function parallelComplete(
+  tasks: Array<{ model: string; messages: ChatMessage[]; maxTokens?: number }>
+): Promise<Array<string | null>> {
+  return Promise.all(
+    tasks.map(async (t) => {
+      try {
+        return await completeChatWithModel(t.model, t.messages, t.maxTokens ?? 200);
+      } catch {
+        return null;
+      }
+    })
+  );
 }

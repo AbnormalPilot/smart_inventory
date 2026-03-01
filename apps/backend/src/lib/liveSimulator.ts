@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { DemandEvent } from "../models/DemandEvent.js";
 import { gatherContext } from "./aiContext.js";
-import { completeChat } from "./openrouter.js";
+import { completeChat, parallelComplete, MODEL_POOL } from "./openrouter.js";
 
 const PRODUCTS: { name: string; category: string }[] = [
   { name: "Toned Milk 500ml", category: "Dairy" },
@@ -156,54 +156,89 @@ export function startLiveSimulator(io: Server): void {
     }, 30_000);
     console.log("  AI forecast insights enabled (every 30s)");
 
-    // AI headlines — rotating smart insights every 20 seconds
-    const headlineTypes = ["insight", "alert", "trend", "tip"] as const;
-    const headlinePrompts: Record<string, string> = {
-      insight:
-        "Give a single short headline (under 15 words) with a key business insight from this inventory data. Include a specific number or product name. No quotes.",
-      alert:
-        "Give a single short headline (under 15 words) about the most urgent stock alert or risk from this data. Include the product name. No quotes.",
-      trend:
-        "Give a single short headline (under 15 words) about a demand trend you see in this data. Mention direction (rising/falling) and a product or category. No quotes.",
-      tip:
-        "Give a single short headline (under 15 words) with a smart restocking or pricing tip based on this data. Be specific. No quotes.",
-    };
-    let headlineIdx = 0;
+    // AI headlines — parallel multi-model burst every 25 seconds
+    // All 4 headline types fire simultaneously across 4 different models
+    const HEADLINE_TASKS = [
+      {
+        type: "insight" as const,
+        model: MODEL_POOL[0], // nvidia/nemotron
+        prompt:
+          "Give a single short headline (under 15 words) with a key business insight from this inventory data. Include a specific number or product name. No quotes.",
+      },
+      {
+        type: "alert" as const,
+        model: MODEL_POOL[1], // stepfun/step-3.5-flash
+        prompt:
+          "Give a single short headline (under 15 words) about the most urgent stock alert or risk from this data. Include the product name. No quotes.",
+      },
+      {
+        type: "trend" as const,
+        model: MODEL_POOL[2], // arcee/trinity-large
+        prompt:
+          "Give a single short headline (under 15 words) about a demand trend you see in this data. Mention direction (rising/falling) and a product or category. No quotes.",
+      },
+      {
+        type: "tip" as const,
+        model: MODEL_POOL[3], // arcee/trinity-mini
+        prompt:
+          "Give a single short headline (under 15 words) with a smart restocking or pricing tip based on this data. Be specific. No quotes.",
+      },
+    ];
 
-    const emitHeadline = async () => {
+    const SYSTEM_MSG = {
+      role: "system" as const,
+      content:
+        "You are a smart inventory headline writer for a dashboard ticker. Respond with ONLY the headline text, nothing else. Keep it punchy and data-driven.",
+    };
+
+    const emitAllHeadlines = async () => {
       try {
         const context = await gatherContext();
-        const type = headlineTypes[headlineIdx % headlineTypes.length];
-        headlineIdx++;
-        const text = await completeChat([
-          {
-            role: "system",
-            content:
-              "You are a smart inventory headline writer for a dashboard ticker. Respond with ONLY the headline text, nothing else. Keep it punchy and data-driven.",
-          },
-          {
-            role: "user",
-            content: `${headlinePrompts[type]}\n\nInventory data:\n${context}`,
-          },
-        ]);
-        const cleaned = text.trim().replace(/^["']|["']$/g, "");
-        if (cleaned && cleaned.length > 5) {
-          io.emit("ai:headline", {
-            id: `hl-${Date.now()}`,
-            text: cleaned,
-            type,
-            timestamp: new Date().toISOString(),
-          });
+
+        // Fire all 4 models in parallel
+        const results = await parallelComplete(
+          HEADLINE_TASKS.map((t) => ({
+            model: t.model,
+            messages: [
+              SYSTEM_MSG,
+              {
+                role: "user" as const,
+                content: `${t.prompt}\n\nInventory data:\n${context}`,
+              },
+            ],
+            maxTokens: 60,
+          }))
+        );
+
+        // Emit each successful headline with a small stagger so the UI
+        // receives them sequentially for a nice rolling-in effect
+        let delay = 0;
+        for (let i = 0; i < results.length; i++) {
+          const text = results[i];
+          if (!text) continue;
+          const cleaned = text.trim().replace(/^["']|["']$/g, "");
+          if (cleaned.length < 6 || cleaned.toLowerCase().startsWith("openrouter")) continue;
+
+          const task = HEADLINE_TASKS[i];
+          setTimeout(() => {
+            io.emit("ai:headline", {
+              id: `hl-${Date.now()}-${i}`,
+              text: cleaned,
+              type: task.type,
+              timestamp: new Date().toISOString(),
+            });
+          }, delay);
+          delay += 2000; // stagger 2s between each
         }
       } catch {
-        // skip on error
+        // skip batch on error
       }
     };
 
-    // Emit first headline quickly, then every 20s
-    setTimeout(emitHeadline, 5000);
-    setInterval(emitHeadline, 20_000);
-    console.log("  AI headlines enabled (every 20s)");
+    // First burst after 3s, then every 25s
+    setTimeout(emitAllHeadlines, 3000);
+    setInterval(emitAllHeadlines, 25_000);
+    console.log(`  AI headlines enabled (4 models in parallel, every 25s)`);
   } else {
     console.log(
       "  AI forecast insights disabled (set OPENROUTER_API_KEY in .env)"
