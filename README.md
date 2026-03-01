@@ -332,7 +332,7 @@ The AI engine analyzes real sales and inventory data from MongoDB to generate:
 
 ### 22 REST API Endpoints
 
-The API is fully documented with **Swagger/OpenAPI** at `http://localhost:6000/api/docs`.
+The API is fully documented with **Swagger/OpenAPI** at `http://localhost:7020/api/docs`.
 
 ### Products API
 
@@ -494,9 +494,9 @@ npm run dev
 | ------------ | -------------------------------- |
 | Dashboard    | http://localhost:3001            |
 | Landing Page | http://localhost:3000            |
-| Backend API  | http://localhost:6000            |
-| Swagger Docs | http://localhost:6000/api/docs   |
-| API Status   | http://localhost:6000/api/status |
+| Backend API  | http://localhost:7020            |
+| Swagger Docs | http://localhost:7020/api/docs   |
+| API Status   | http://localhost:7020/api/status |
 
 ### Build All Apps
 
