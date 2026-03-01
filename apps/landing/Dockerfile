@@ -2,14 +2,14 @@ FROM node:22-alpine AS base
 
 WORKDIR /app
 
-# Disable Next.js SWC lockfile patching — npm resolves platform-specific
-# optional deps correctly; the patcher crashes on workspace lockfiles
-# generated on a different OS (e.g. macOS → Alpine Linux).
-ENV NEXT_SWC_DISABLE_LOCKFILE_PATCH=1
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install deps — copy all workspace package.json files so npm can resolve
-# the workspace graph from the root lockfile
+# Remove yarn so Next.js SWC lockfile patcher doesn't try to use it.
+# (It runs `yarn config get registry` which fails because corepack
+#  misreads packageManager:"npm@11.7.0" as a yarn version string.)
+RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg
+
+# Install deps
 COPY package.json package-lock.json turbo.json ./
 COPY apps/landing/package.json apps/landing/
 RUN npm install --workspace=apps/landing

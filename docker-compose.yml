@@ -4,8 +4,8 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
-    ports:
-      - "7020:7020"
+    expose:
+      - "7020"
     environment:
       - PORT=7020
       - MONGODB_URI=${MONGODB_URI}
@@ -33,8 +33,8 @@ services:
     build:
       context: .
       dockerfile: apps/dashboard/Dockerfile
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
     environment:
       - PORT=3001
       - BACKEND_URL=http://backend:7020
@@ -47,8 +47,8 @@ services:
     build:
       context: .
       dockerfile: apps/landing/Dockerfile
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - PORT=3000
     restart: unless-stopped
